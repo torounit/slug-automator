@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Main plugin class.
  *
@@ -13,17 +12,16 @@ namespace Slug_Automator;
 /**
  * Class Slug_Automator
  */
-class Slug_Automator
-{
+class Slug_Automator {
+
 
 	/**
 	 * Initialize hooks.
 	 *
 	 * @return void
 	 */
-	public function init(): void
-	{
-		add_action('enqueue_block_editor_assets', array($this, 'enqueue_block_editor_assets'));
+	public function init(): void {
+		add_action( 'enqueue_block_editor_assets', array( $this, 'enqueue_block_editor_assets' ) );
 	}
 
 	/**
@@ -31,11 +29,10 @@ class Slug_Automator
 	 *
 	 * @return void
 	 */
-	public function enqueue_block_editor_assets(): void
-	{
+	public function enqueue_block_editor_assets(): void {
 		$asset_file = SLUG_AUTOMATOR_PLUGIN_DIR . 'build/index.asset.php';
 
-		if (! file_exists($asset_file)) {
+		if ( ! file_exists( $asset_file ) ) {
 			return;
 		}
 
@@ -55,9 +52,7 @@ class Slug_Automator
 	 *
 	 * @return void
 	 */
-	public static function activate(): void
-	{
-		// 必要に応じて初期化処理を行う。
+	public static function activate(): void {
 	}
 
 	/**
@@ -65,8 +60,6 @@ class Slug_Automator
 	 *
 	 * @return void
 	 */
-	public static function deactivate(): void
-	{
-		// 必要に応じてクリーンアップ処理を行う。
+	public static function deactivate(): void {
 	}
 }
