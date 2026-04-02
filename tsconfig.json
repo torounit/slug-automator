@@ -1,0 +1,12 @@
+{
+	"compilerOptions": {
+		"target": "esnext",
+		"module": "esnext",
+		"moduleResolution": "bundler",
+		"jsx": "react",
+		"strict": true,
+		"noEmit": true,
+		"rootDir": "src"
+	},
+	"include": [ "src/**/*" ]
+}

@@ -1,0 +1,38 @@
+{
+	"name": "torounit/slug-automator",
+	"description": "Automates slug generation for WordPress posts.",
+	"type": "wordpress-plugin",
+	"license": "GPL-2.0-or-later",
+	"require": {
+		"php": ">=8.2"
+	},
+	"require-dev": {
+		"wp-coding-standards/wpcs": "^3.0",
+		"phpcompatibility/php-compatibility": "*",
+		"phpcompatibility/phpcompatibility-wp": "*",
+		"dealerdirect/phpcodesniffer-composer-installer": "*",
+		"phpunit/phpunit": "^9.0 || ^10.0",
+		"yoast/phpunit-polyfills": "^2.0",
+		"wp-phpunit/wp-phpunit": "^6.7"
+	},
+	"autoload": {
+		"psr-4": {
+			"Slug_Automator\\": "includes/"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"Slug_Automator\\Tests\\": "tests/phpunit/"
+		}
+	},
+	"config": {
+		"allow-plugins": {
+			"dealerdirect/phpcodesniffer-composer-installer": true
+		}
+	},
+	"scripts": {
+		"lint": "phpcs",
+		"lint:fix": "phpcbf",
+		"test": "phpunit"
+	}
+}
