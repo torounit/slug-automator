@@ -2,20 +2,50 @@
 	"name": "slug-automator",
 	"version": "0.1.0",
 	"description": "Automates slug generation for WordPress posts.",
-	"private": true,
-	"scripts": {
-		"build": "wp-scripts build",
-		"start": "wp-scripts start",
-		"lint:js": "wp-scripts lint-js",
-		"lint:style": "wp-scripts lint-style",
-		"packages-update": "wp-scripts packages-update",
-		"plugin-zip": "wp-scripts plugin-zip"
+	"author": "Toro_Unit",
+	"license": "GPL-2.0-or-later",
+	"keywords": [
+		"wordpress",
+		"slug",
+		"ai"
+	],
+	"homepage": "https://github.com/torounit/slug-automator",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/torounit/slug-automator.git"
 	},
-	"devDependencies": {
-		"@wordpress/scripts": "^30.0.0"
-	},
+	"bugs": "https://github.com/torounit/slug-automator/issues",
 	"dependencies": {
 		"@wordpress/dom-ready": "*",
 		"@wordpress/hooks": "*"
+	},
+	"devDependencies": {
+		"@wordpress/scripts": "^30.0.0",
+		"husky": "^9.1.7",
+		"lint-staged": "^16.4.0"
+	},
+	"scripts": {
+		"build": "wp-scripts build",
+		"start": "wp-scripts start",
+		"format": "wp-scripts format",
+		"lint:js": "wp-scripts lint-js",
+		"lint:style": "wp-scripts lint-style",
+		"lint:pkg-json": "wp-scripts lint-pkg-json",
+		"lint:md": "wp-scripts lint-md-docs",
+		"packages-update": "wp-scripts packages-update",
+		"plugin-zip": "wp-scripts plugin-zip",
+		"prepare": "husky"
+	},
+	"private": true,
+	"lint-staged": {
+		"*.php": [
+			"vendor/bin/phpcbf",
+			"vendor/bin/phpcs"
+		],
+		"*.{js,ts,json,yaml,yml}": "wp-scripts format",
+		"*.{js,ts}": "wp-scripts lint-js",
+		"*.{css,scss}": "wp-scripts lint-style",
+		"package.json": "wp-scripts lint-pkg-json",
+		"*.md": "wp-scripts lint-md-docs"
 	}
 }
