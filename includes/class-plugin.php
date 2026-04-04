@@ -21,7 +21,49 @@ class Plugin {
 	 */
 	public function init(): void {
 		add_action( 'enqueue_block_editor_assets', array( $this, 'enqueue_block_editor_assets' ) );
+		add_action( 'admin_notices', array( $this, 'show_no_connector_notice' ) );
 		( new Auto_Slug( new Slugifier() ) )->register();
+	}
+
+	/**
+	 * Show an admin notice when no AI Connector is configured.
+	 *
+	 * @return void
+	 */
+	public function show_no_connector_notice(): void {
+		if ( $this->has_ai_connector() ) {
+			return;
+		}
+
+		wp_admin_notice(
+			sprintf(
+				/* translators: %s: URL to the Connectors settings page. */
+				__( 'The Slug Automator plugin requires a valid AI Connector to function properly. Verify you have one or more AI Connectors configured <a href="%s">here</a>.', 'slug-automator' ),
+				esc_url( admin_url( 'options-connectors.php' ) )
+			),
+			array( 'type' => 'error' )
+		);
+	}
+
+	/**
+	 * Check whether at least one AI provider connector with credentials is configured.
+	 *
+	 * @return bool
+	 */
+	public function has_ai_connector(): bool {
+		foreach ( wp_get_connectors() as $connector ) {
+			if ( 'ai_provider' !== $connector['type'] ) {
+				continue;
+			}
+
+			$auth = $connector['authentication'];
+
+			if ( 'api_key' === $auth['method'] && ! empty( $auth['setting_name'] ) && '' !== get_option( $auth['setting_name'], '' ) ) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	/**
