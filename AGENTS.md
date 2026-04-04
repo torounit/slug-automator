@@ -8,8 +8,7 @@
 composer install          # Install dependencies
 composer lint             # Run PHPCS (uses phpcs.xml.dist)
 composer lint:fix         # Auto-fix with PHPCBF
-composer test             # Run all PHPUnit tests
-vendor/bin/phpunit --filter test_name  # Run a single test
+npm run test:unit:php     # Run PHPUnit tests on wp-env
 ```
 
 ### JavaScript / TypeScript

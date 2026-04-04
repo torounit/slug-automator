@@ -7,11 +7,12 @@
 		"https://downloads.wordpress.org/plugin/ai-provider-for-google.zip",
 		"https://downloads.wordpress.org/plugin/ai-provider-for-openai.zip"
 	],
+	"port": 8889,
 	"config": {
-		"WP_DEVELOPMENT_MODE": "plugin",
-		"WP_ENVIRONMENT_TYPE": "development",
-		"WP_DEBUG": true,
-		"WP_DEBUG_LOG": "/var/www/html/wp-content/plugins/slug-automator/tests/_output/debug.log"
+		"WP_DEBUG": true
+	},
+	"mappings": {
+		"/wp-content/plugins/slug-automator": "."
 	},
 	"phpVersion": "8.4",
 	"lifecycleScripts": {

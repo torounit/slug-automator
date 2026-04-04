@@ -11,9 +11,9 @@
 		"phpcompatibility/php-compatibility": "*",
 		"phpcompatibility/phpcompatibility-wp": "*",
 		"dealerdirect/phpcodesniffer-composer-installer": "*",
-		"phpunit/phpunit": "^9.0 || ^10.0",
+		"phpunit/phpunit": "^9.6",
 		"yoast/phpunit-polyfills": "^2.0",
-		"wp-phpunit/wp-phpunit": "^6.7"
+		"wp-phpunit/wp-phpunit": "^6.9"
 	},
 	"autoload": {
 		"psr-4": {
@@ -22,7 +22,7 @@
 	},
 	"autoload-dev": {
 		"psr-4": {
-			"Slug_Automator\\Tests\\Unit\\": "tests/phpunit/unit"
+			"Slug_Automator\\Tests\\Unit\\": "tests/phpunit/unit/"
 		}
 	},
 	"config": {
