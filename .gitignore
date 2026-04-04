@@ -21,3 +21,5 @@ Thumbs.db
 
 # WordPress test config
 /wp-tests-config.php
+
+*.cache
