@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Unit tests for Slug_Automator class.
+ * Unit tests for the Plugin class.
  *
  * @package Slug_Automator\Tests
  */
@@ -10,18 +10,17 @@ declare(strict_types=1);
 
 namespace Slug_Automator\Tests\Unit;
 
-use Slug_Automator\Slug_Automator;
+use Slug_Automator\Plugin;
 
 /**
- * Class Slug_Automator_Test
+ * Class Plugin_Test
  */
-class Slug_Automator_Test extends \WP_UnitTestCase
-{
+class Plugin_Test extends \WP_UnitTestCase {
 
 	/**
-	 * @var Slug_Automator
+	 * @var Plugin
 	 */
-	private Slug_Automator $plugin;
+	private Plugin $plugin;
 
 	/**
 	 * Set up test.
@@ -29,7 +28,7 @@ class Slug_Automator_Test extends \WP_UnitTestCase
 	public function set_up(): void
 	{
 		parent::set_up();
-		$this->plugin = new Slug_Automator();
+		$this->plugin = new Plugin();
 	}
 
 	/**

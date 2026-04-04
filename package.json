@@ -41,7 +41,7 @@
 	"private": true,
 	"lint-staged": {
 		"*.php": [
-			"vendor/bin/phpcbf",
+			"sh -c 'vendor/bin/phpcbf \"$@\" || true' --",
 			"vendor/bin/phpcs"
 		],
 		"*.{js,ts,json,yaml,yml}": "wp-scripts format",

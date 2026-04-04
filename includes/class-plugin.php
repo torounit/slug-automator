@@ -12,7 +12,7 @@ namespace Slug_Automator;
 /**
  * Class Slug_Automator
  */
-class Slug_Automator {
+class Plugin {
 
 	/**
 	 * Initialize hooks.

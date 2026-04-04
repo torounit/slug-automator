@@ -22,7 +22,7 @@
 	},
 	"autoload-dev": {
 		"psr-4": {
-			"Slug_Automator\\Tests\\": "tests/phpunit/"
+			"Slug_Automator\\Tests\\Unit\\": "tests/phpunit/unit"
 		}
 	},
 	"config": {
