@@ -21,6 +21,7 @@ class Plugin {
 	 */
 	public function init(): void {
 		add_action( 'enqueue_block_editor_assets', array( $this, 'enqueue_block_editor_assets' ) );
+		( new Auto_Slug( new Slugifier() ) )->register();
 	}
 
 	/**
