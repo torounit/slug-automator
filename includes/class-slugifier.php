@@ -1,6 +1,6 @@
 <?php
 /**
- * Slug Generator Class
+ * Slugifier Class
  *
  * This class is responsible for generating slugs from post titles, utilizing WordPress's AI capabilities for translation when available, and falling back to sanitized titles when not.
  *
@@ -10,9 +10,9 @@
 namespace Slug_Automator;
 
 /**
- * Class Generator
+ * Class Slugifier
  */
-class Generator {
+class Slugifier {
 
 	/**
 	 * Generate a slug from the given title.
