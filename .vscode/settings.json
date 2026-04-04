@@ -1,0 +1,9 @@
+{
+	"[php]": {
+		"editor.defaultFormatter": "valeryanm.vscode-phpsab"
+	},
+	"phpsab.executablePathCS": "./vendor/bin/phpcs",
+	"phpsab.executablePathCBF": "./vendor/bin/phpcbf",
+	"phpsab.autoRulesetSearch": true,
+	"phpsab.standard": "phpcs.xml.dist"
+}

@@ -14,7 +14,6 @@ namespace Slug_Automator;
  */
 class Slug_Automator {
 
-
 	/**
 	 * Initialize hooks.
 	 *
@@ -52,14 +51,12 @@ class Slug_Automator {
 	 *
 	 * @return void
 	 */
-	public static function activate(): void {
-	}
+	public static function activate(): void {}
 
 	/**
 	 * Plugin deactivation.
 	 *
 	 * @return void
 	 */
-	public static function deactivate(): void {
-	}
+	public static function deactivate(): void {}
 }

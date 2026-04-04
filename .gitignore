@@ -12,7 +12,6 @@ composer.lock
 package-lock.json
 
 # IDE
-.vscode/
 .idea/
 *.code-workspace
 
