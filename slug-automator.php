@@ -27,6 +27,8 @@ define( 'SLUG_AUTOMATOR_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'SLUG_AUTOMATOR_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'SLUG_AUTOMATOR_PLUGIN_FILE', __FILE__ );
 
+require_once SLUG_AUTOMATOR_PLUGIN_DIR . 'includes/class-slugifier.php';
+require_once SLUG_AUTOMATOR_PLUGIN_DIR . 'includes/class-auto-slug.php';
 require_once SLUG_AUTOMATOR_PLUGIN_DIR . 'includes/class-plugin.php';
 
 register_activation_hook( __FILE__, array( 'Slug_Automator\\Plugin', 'activate' ) );

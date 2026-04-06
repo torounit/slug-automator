@@ -37,9 +37,9 @@
 		"packages-update": "wp-scripts packages-update",
 		"plugin-zip": "wp-scripts plugin-zip",
 		"wp-env": "wp-env",
-		"test:unit:php": "npm-run-all test:unit:php:setup test:unit:php:base",
-		"test:unit:php:setup": "wp-env --config=.wp-env.test.json start",
-		"test:unit:php:base": "wp-env --config=.wp-env.test.json run --env-cwd='wp-content/plugins/slug-automator' wordpress vendor/bin/phpunit -c phpunit.xml.dist",
+		"test:php": "npm-run-all test:php:setup test:php:base",
+		"test:php:setup": "wp-env --config=.wp-env.test.json start",
+		"test:php:base": "wp-env --config=.wp-env.test.json run --env-cwd='wp-content/plugins/slug-automator' wordpress vendor/bin/phpunit -c phpunit.xml.dist",
 		"prepare": "husky"
 	},
 	"private": true,
