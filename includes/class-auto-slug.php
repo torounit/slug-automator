@@ -11,6 +11,10 @@ declare(strict_types=1);
 
 namespace Slug_Automator;
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * Class Auto_Slug
  */
