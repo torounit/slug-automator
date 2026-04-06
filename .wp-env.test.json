@@ -16,6 +16,6 @@
 	},
 	"phpVersion": "8.4",
 	"lifecycleScripts": {
-		"afterStart": "wp-env run cli wp rewrite structure /%postname%/ --hard"
+		"afterStart": "wp-env --config=.wp-env.test.json run cli wp rewrite structure /%postname%/ --hard"
 	}
 }
