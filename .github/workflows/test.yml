@@ -53,8 +53,33 @@ jobs:
               id: tag
               run: echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
 
-            - name: Build project
-              run: git archive -o /tmp/${{ github.event.repository.name }}-${{ steps.tag.outputs.tag }}.zip --prefix=${{ github.event.repository.name }}/ ${{ steps.tag.outputs.tag }}
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: lts/*
+                  cache: npm
+
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '8.2'
+
+            - name: Install Node dependencies and build
+              run: npm ci && npm run build
+
+            - name: Install Composer production dependencies
+              run: composer install --no-dev --no-progress --no-interaction --optimize-autoloader
+
+            - name: Build plugin zip
+              run: |
+                  PLUGIN=${{ github.event.repository.name }}
+                  TAG=${{ steps.tag.outputs.tag }}
+                  DEST=/tmp/${PLUGIN}-${TAG}
+                  mkdir -p ${DEST}
+                  git archive --prefix=${PLUGIN}/ HEAD | tar -x -C ${DEST}
+                  cp -r build vendor ${DEST}/${PLUGIN}/
+                  cd ${DEST}
+                  zip -r /tmp/${PLUGIN}-${TAG}.zip ${PLUGIN}/
 
             - name: Create Release
               uses: softprops/action-gh-release@v2
