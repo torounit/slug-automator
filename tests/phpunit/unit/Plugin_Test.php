@@ -21,7 +21,13 @@ class Plugin_Test extends \WP_UnitTestCase {
 
 	public function set_up(): void {
 		parent::set_up();
+		delete_option( 'connectors_ai_openai_api_key' );
 		$this->plugin = new Plugin();
+	}
+
+	public function tear_down(): void {
+		delete_option( 'connectors_ai_openai_api_key' );
+		parent::tear_down();
 	}
 
 	/**

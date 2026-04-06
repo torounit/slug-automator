@@ -2,10 +2,12 @@
 /**
  * Slugifier Class
  *
- * This class is responsible for generating slugs from post titles, utilizing WordPress's AI capabilities for translation when available, and falling back to sanitized titles when not.
+ * This class is responsible for generating slugs from post titles, utilizing WordPress's AI capabilities for translation when available.
  *
  * @package Slug_Automator
  */
+
+declare(strict_types=1);
 
 namespace Slug_Automator;
 
@@ -45,6 +47,10 @@ class Slugifier {
 	 * @return string|null Translated text. Null if AI is not available.
 	 */
 	protected function translate_with_wp_ai( string $title ): ?string {
+		if ( ! function_exists( 'wp_ai_client_prompt' ) ) {
+			return null;
+		}
+
 		$schema = array(
 			'type'       => 'object',
 			'properties' => array(
