@@ -38,8 +38,7 @@ class Slugifier {
 	/**
 	 * Translate the title to English using WordPress AI capabilities.
 	 *
-	 * WordPress 7.0 or later AI API will be used if available.
-	 * Since the official API does not exist yet, this will be implemented once it becomes available.
+	 * Uses the WordPress 7.0 or later AI API when available.
 	 *
 	 * @param string $title Original title.
 	 *
