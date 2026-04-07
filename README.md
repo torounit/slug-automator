@@ -7,7 +7,7 @@ Tested up to: 7.0
 Stable tag: 0.1.0  
 Requires PHP: 8.2  
 License: GPLv2 or later  
-License URI: https://www.gnu.org/licenses/gpl-2.0.html  
+License URI: <https://www.gnu.org/licenses/gpl-2.0.html>  
 
 Automatically generates SEO-friendly slugs from post titles using the WordPress AI Client.
 
@@ -15,7 +15,9 @@ Automatically generates SEO-friendly slugs from post titles using the WordPress 
 
 Slug Automator automatically generates slugs from WordPress post titles using the [AI Client](https://make.wordpress.org/core/2026/03/24/introducing-the-ai-client-in-wordpress-7-0/) introduced in WordPress 7.0.
 
-When you write a post title, the plugin generates a clean, SEO-friendly slug — no manual input required. Because it relies on the WordPress AI Client, it works with any AI provider configured on your site (Anthropic, Google, OpenAI, and more).
+Writing post titles in Japanese or any other non-English language? Slug Automator uses AI to translate them into clean, English URL-friendly slugs — no manual input required. It only runs when the slug field is empty, so any slug you set yourself will never be overwritten.
+
+Because it relies on the WordPress AI Client, it works with any AI provider configured on your site (Anthropic, Google, OpenAI, and more).
 
 ### Features
 
