@@ -1,6 +1,6 @@
 {
 	"name": "slug-automator",
-	"version": "0.1.0",
+	"version": "0.1.2",
 	"description": "Automates slug generation for WordPress posts.",
 	"author": "Toro_Unit",
 	"license": "GPL-2.0-or-later",
