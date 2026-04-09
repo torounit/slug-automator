@@ -9,7 +9,7 @@ Requires PHP: 8.2
 License: GPLv2 or later  
 License URI: <https://www.gnu.org/licenses/gpl-2.0.html>  
 
-Automatically generates SEO-friendly slugs from post titles using the WordPress AI Client.
+Automatically generates URL-friendly slugs from post titles using the WordPress AI Client.
 
 ## Description
 
