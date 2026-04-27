@@ -27,6 +27,7 @@ class Plugin {
 		add_action( 'enqueue_block_editor_assets', array( $this, 'enqueue_block_editor_assets' ) );
 		add_action( 'admin_notices', array( $this, 'show_no_connector_notice' ) );
 		( new Auto_Slug( new Slugifier() ) )->register();
+		( new Generate_Slug_Ability( new Slugifier() ) )->register();
 	}
 
 	/**
