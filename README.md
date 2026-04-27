@@ -19,6 +19,8 @@ Writing post titles in Japanese or any other non-English language? Slug Automato
 
 Because it relies on the WordPress AI Client, it works with any AI provider configured on your site (Anthropic, Google, OpenAI, and more).
 
+Github: [https://github.com/torounit/slug-automator](https://github.com/torounit/slug-automator)
+
 ### Features
 
 * Automatically generates slugs from post titles via AI
