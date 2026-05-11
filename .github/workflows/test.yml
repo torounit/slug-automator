@@ -92,3 +92,10 @@ jobs:
               uses: actions/attest-build-provenance@v2
               with:
                   subject-path: /tmp/${{ github.event.repository.name }}-${{ steps.tag.outputs.tag }}.zip
+
+            - name: WordPress Plugin Deploy
+              uses: 10up/action-wordpress-plugin-deploy@stable
+              env:
+                  SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+                  SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+                  SLUG: slug-automator

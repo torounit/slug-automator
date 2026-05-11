@@ -45,6 +45,10 @@ No. The plugin only generates a slug when the slug field is empty.
 
 ## Changelog
 
+### 0.1.5
+
+* WordPress Plugin Directory release.
+
 ### 0.1.0
 
 * Initial release.
