@@ -4,7 +4,7 @@ Contributors: Toro_Unit
 Tags: slug, permalink, ai  
 Requires at least: 7.0  
 Tested up to: 7.0  
-Stable tag: 0.1.8  
+Stable tag: 0.2.0  
 Requires PHP: 8.2  
 License: GPLv2 or later  
 License URI: <https://www.gnu.org/licenses/gpl-2.0.html>  
@@ -44,6 +44,10 @@ This plugin uses the WordPress AI Client (requires WordPress 7.0 or later). It w
 No. The plugin only generates a slug when the slug field is empty.
 
 ## Changelog
+
+### 0.2.0
+
+* Add support for Gemini 3.1 Flash Lite model.
 
 ### 0.1.8
 
