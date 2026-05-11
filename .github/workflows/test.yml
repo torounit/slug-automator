@@ -1,4 +1,4 @@
-name: Test
+name: Test and Deploy
 on:
     pull_request:
         paths-ignore:
@@ -70,32 +70,18 @@ jobs:
             - name: Install Composer production dependencies
               run: composer install --no-dev --no-progress --no-interaction --optimize-autoloader
 
-            - name: Build plugin zip
-              run: |
-                  PLUGIN=${{ github.event.repository.name }}
-                  TAG=${{ steps.tag.outputs.tag }}
-                  DEST=/tmp/${PLUGIN}-${TAG}
-                  mkdir -p ${DEST}
-                  git archive --prefix=${PLUGIN}/ HEAD | tar -x -C ${DEST}
-                  cp -r build vendor ${DEST}/${PLUGIN}/
-                  cd ${DEST}
-                  zip -r /tmp/${PLUGIN}-${TAG}.zip ${PLUGIN}/
-
-            - name: Create Release
-              uses: softprops/action-gh-release@v2
-              env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-              with:
-                  files: /tmp/${{ github.event.repository.name }}-${{ steps.tag.outputs.tag }}.zip
-
-            - name: Build provenance attestation
-              uses: actions/attest-build-provenance@v2
-              with:
-                  subject-path: /tmp/${{ github.event.repository.name }}-${{ steps.tag.outputs.tag }}.zip
-
             - name: WordPress Plugin Deploy
               uses: 10up/action-wordpress-plugin-deploy@stable
+              with:
+                  generate-zip: true
               env:
                   SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
                   SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
                   SLUG: slug-automator
+
+            - name: Upload release asset
+              uses: softprops/action-gh-release@v2
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              with:
+                  files: ${{ github.workspace }}/${{ github.event.repository.name }}.zip
