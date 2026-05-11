@@ -63,8 +63,7 @@ class Slugifier {
 			->using_system_instruction(
 				'Convert the provided title into a concise English URL slug. ' .
 				'Use only lowercase letters, numbers, and hyphens. ' .
-				'Do not use spaces or special characters. ' .
-				'Keep it to a maximum of 5 words.'
+				'Do not use spaces or special characters. '
 			)
 			->using_temperature( 0.1 )
 			->as_json_response( $schema )
@@ -72,6 +71,10 @@ class Slugifier {
 				array(
 					'anthropic',
 					'claude-haiku-4-5',
+				),
+				array(
+					'google',
+					'gemini-3.1-flash-lite',
 				),
 				array(
 					'google',
