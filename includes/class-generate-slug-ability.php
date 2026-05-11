@@ -25,7 +25,8 @@ class Generate_Slug_Ability {
 	 *
 	 * @param Slugifier $slugifier Slugifier instance.
 	 */
-	public function __construct( private readonly Slugifier $slugifier ) {}
+	public function __construct( private readonly Slugifier $slugifier ) {
+	}
 
 	/**
 	 * Register ability category and ability via WordPress Abilities API hooks.
@@ -33,13 +34,8 @@ class Generate_Slug_Ability {
 	 * @return void
 	 */
 	public function register(): void {
-		if ( function_exists( 'wp_register_ability_category' ) ) {
-			add_action( 'wp_abilities_api_categories_init', array( $this, 'register_category' ) );
-		}
-
-		if ( function_exists( 'wp_register_ability' ) ) {
-			add_action( 'wp_abilities_api_init', array( $this, 'register_ability' ) );
-		}
+		add_action( 'wp_abilities_api_categories_init', array( $this, 'register_category' ) );
+		add_action( 'wp_abilities_api_init', array( $this, 'register_ability' ) );
 	}
 
 	/**
@@ -51,7 +47,8 @@ class Generate_Slug_Ability {
 		wp_register_ability_category(
 			'slug-automator',
 			array(
-				'label' => __( 'Slug Automator', 'slug-automator' ),
+				'label'       => __( 'Slug Automator', 'slug-automator' ),
+				'description' => __( 'Abilities provided by the Slug Automator plugin.', 'slug-automator' ),
 			)
 		);
 	}
