@@ -22,10 +22,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'SLUG_AUTOMATOR_VERSION', '0.1.4' );
 define( 'SLUG_AUTOMATOR_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'SLUG_AUTOMATOR_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
-define( 'SLUG_AUTOMATOR_PLUGIN_FILE', __FILE__ );
 
 require_once SLUG_AUTOMATOR_PLUGIN_DIR . 'includes/class-slugifier.php';
 require_once SLUG_AUTOMATOR_PLUGIN_DIR . 'includes/class-auto-slug.php';
