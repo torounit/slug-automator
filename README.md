@@ -4,7 +4,7 @@ Contributors: Toro_Unit
 Tags: slug, permalink, ai  
 Requires at least: 7.0  
 Tested up to: 7.0  
-Stable tag: 0.2.0  
+Stable tag: 0.3.1  
 Requires PHP: 8.2  
 License: GPLv2 or later  
 License URI: <https://www.gnu.org/licenses/gpl-2.0.html>  
@@ -44,6 +44,10 @@ This plugin uses the WordPress AI Client (requires WordPress 7.0 or later). It w
 No. The plugin only generates a slug when the slug field is empty.
 
 ## Changelog
+
+### 0.3.1
+
+* Add "Generate Slug" button to the block editor using the WordPress Abilities API.
 
 ### 0.2.0
 
