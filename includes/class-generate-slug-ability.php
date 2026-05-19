@@ -74,12 +74,23 @@ class Generate_Slug_Ability {
 							'description'       => __( 'The post title to generate a slug from.', 'slug-automator' ),
 						),
 						'context' => array(
-							'type'              => 'string',
-							'sanitize_callback' => 'sanitize_text_field',
-							'description'       => __( 'Optional. A post ID to check edit permission against.', 'slug-automator' ),
+							'type'        => 'object',
+							'description' => __( 'The target object this slug is being generated for.', 'slug-automator' ),
+							'properties'  => array(
+								'type' => array(
+									'type'        => 'string',
+									'enum'        => array( 'post' ),
+									'description' => __( 'The kind of object. Currently only "post" is supported.', 'slug-automator' ),
+								),
+								'id'   => array(
+									'type'        => 'integer',
+									'description' => __( 'The ID of the target object.', 'slug-automator' ),
+								),
+							),
+							'required'    => array( 'type', 'id' ),
 						),
 					),
-					'required'   => array( 'title' ),
+					'required'   => array( 'title', 'context' ),
 				),
 				'output_schema'       => array(
 					'type'       => 'object',
@@ -120,51 +131,59 @@ class Generate_Slug_Ability {
 	/**
 	 * Check whether the current user can execute this ability.
 	 *
-	 * If 'context' is a numeric string, it is treated as a post ID and
-	 * edit_post permission is checked for that specific post.
-	 * Otherwise, the general edit_posts capability is required.
+	 * Dispatches to a type-specific permission check based on context['type'].
+	 * Currently only 'post' is supported.
 	 *
-	 * @param array $input Input data, optionally containing 'context' (a numeric post ID).
+	 * @param array $input Input data containing 'context' with 'type' and 'id'.
 	 *
 	 * @return bool|\WP_Error
 	 */
 	public function permission_callback( array $input ): bool|\WP_Error {
-		$post_id = isset( $input['context'] ) && is_numeric( $input['context'] ) ? absint( $input['context'] ) : null;
+		$context = is_array( $input['context'] ?? null ) ? $input['context'] : array();
+		$type    = isset( $context['type'] ) ? sanitize_key( $context['type'] ) : '';
+		$id      = isset( $context['id'] ) ? absint( $context['id'] ) : 0;
 
-		if ( $post_id ) {
-			$post = get_post( $post_id );
-
-			if ( ! $post ) {
-				return new \WP_Error(
-					'post_not_found',
-					/* translators: %d: Post ID. */
-					sprintf( __( 'Post with ID %d not found.', 'slug-automator' ), $post_id )
-				);
-			}
-
-			if ( ! current_user_can( 'edit_post', $post_id ) ) {
-				return new \WP_Error(
-					'insufficient_capabilities',
-					__( 'You do not have permission to generate a slug for this post.', 'slug-automator' )
-				);
-			}
-
-			$post_type_obj = get_post_type_object( get_post_type( $post_id ) );
-
-			if ( ! $post_type_obj || empty( $post_type_obj->show_in_rest ) ) {
-				return false;
-			}
-
-			return true;
-		}
-
-		if ( ! current_user_can( 'edit_posts' ) ) {
+		if ( '' === $type || 0 === $id ) {
 			return new \WP_Error(
-				'insufficient_capabilities',
-				__( 'You do not have permission to generate slugs.', 'slug-automator' )
+				'invalid_context',
+				__( 'A valid context (type and id) is required.', 'slug-automator' )
 			);
 		}
 
-		return true;
+		if ( 'post' === $type ) {
+			return $this->check_post_permission( $id );
+		}
+
+		return new \WP_Error(
+			'unsupported_context_type',
+			/* translators: %s: context type. */
+			sprintf( __( 'Unsupported context type: %s.', 'slug-automator' ), $type )
+		);
+	}
+
+	/**
+	 * Check whether the current user can generate a slug for a specific post.
+	 *
+	 * @param int $post_id Post ID.
+	 *
+	 * @return bool|\WP_Error
+	 */
+	private function check_post_permission( int $post_id ): bool|\WP_Error {
+		if ( ! get_post( $post_id ) ) {
+			return new \WP_Error(
+				'post_not_found',
+				/* translators: %d: Post ID. */
+				sprintf( __( 'Post with ID %d not found.', 'slug-automator' ), $post_id )
+			);
+		}
+
+		if ( current_user_can( 'edit_post', $post_id ) ) {
+			return true;
+		}
+
+		return new \WP_Error(
+			'insufficient_capabilities',
+			__( 'You do not have permission to generate a slug for this post.', 'slug-automator' )
+		);
 	}
 }

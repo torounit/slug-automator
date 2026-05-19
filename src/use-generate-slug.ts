@@ -26,7 +26,9 @@ export const useGenerateSlug = () => {
 			const response = await apiFetch< { slug: string } >( {
 				path: '/wp-abilities/v1/abilities/slug-automator/generate-slug/run',
 				method: 'POST',
-				data: { input: { title, context: String( id ) } },
+				data: {
+					input: { title, context: { type: 'post', id } },
+				},
 			} );
 			await editPost( { slug: response.slug } );
 		} catch ( error: any ) {
