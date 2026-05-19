@@ -59,4 +59,30 @@ class Slugifier_Test extends \WP_UnitTestCase {
 
 		$this->assertNull( $this->slugifier->generate( 'any title' ) );
 	}
+
+	/**
+	 * generate() passes sanitize_title($avoid) to translate_with_wp_ai when avoid contains special chars.
+	 */
+	public function test_generate_passes_sanitized_avoid_to_translator(): void {
+		$this->slugifier
+			->expects( $this->once() )
+			->method( 'translate_with_wp_ai' )
+			->with( 'any title', 'hello-world' )
+			->willReturn( 'different-slug' );
+
+		$this->slugifier->generate( 'any title', 'Hello World!' );
+	}
+
+	/**
+	 * generate() passes null to translate_with_wp_ai when avoid is an empty string.
+	 */
+	public function test_generate_passes_null_to_translator_when_avoid_is_empty(): void {
+		$this->slugifier
+			->expects( $this->once() )
+			->method( 'translate_with_wp_ai' )
+			->with( 'any title', null )
+			->willReturn( 'my-slug' );
+
+		$this->slugifier->generate( 'any title', '' );
+	}
 }

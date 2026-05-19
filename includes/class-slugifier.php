@@ -27,7 +27,15 @@ class Slugifier {
 	 * @return string|null Generated slug or null if AI translation is not available.
 	 */
 	public function generate( string $title, ?string $avoid = null ): ?string {
-		$slug = $this->translate_with_wp_ai( $title, $avoid );
+		$avoid_sanitized = null;
+		if ( null !== $avoid && '' !== $avoid ) {
+			$candidate = sanitize_title( $avoid );
+			if ( '' !== $candidate ) {
+				$avoid_sanitized = $candidate;
+			}
+		}
+
+		$slug = $this->translate_with_wp_ai( $title, $avoid_sanitized );
 
 		if ( null === $slug ) {
 			return null;
