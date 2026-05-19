@@ -55,10 +55,23 @@ class Generate_Slug_Ability_Test extends \WP_UnitTestCase {
 		$this->slugifier
 			->expects( $this->once() )
 			->method( 'generate' )
-			->with( 'Hello World' )
+			->with( 'Hello World', null )
 			->willReturn( 'hello-world' );
 
 		$this->ability->execute_callback( array( 'title' => 'Hello World' ) );
+	}
+
+	/**
+	 * execute() passes avoid to Slugifier::generate() when provided.
+	 */
+	public function test_execute_passes_avoid_to_slugifier(): void {
+		$this->slugifier
+			->expects( $this->once() )
+			->method( 'generate' )
+			->with( 'Hello World', 'old-slug' )
+			->willReturn( 'hello-world-2' );
+
+		$this->ability->execute_callback( array( 'title' => 'Hello World', 'avoid' => 'old-slug' ) );
 	}
 
 	/**

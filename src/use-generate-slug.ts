@@ -8,10 +8,11 @@ import { store as editorStore } from '@wordpress/editor';
 import { store as noticesStore } from '@wordpress/notices';
 
 export const useGenerateSlug = () => {
-	const { title, id } = useSelect(
+	const { title, id, slug } = useSelect(
 		( select ) => ( {
 			title: select( editorStore ).getEditedPostAttribute( 'title' ),
 			id: select( editorStore ).getCurrentPostId(),
+			slug: select( editorStore ).getEditedPostAttribute( 'slug' ),
 		} ),
 		[]
 	);
@@ -27,7 +28,11 @@ export const useGenerateSlug = () => {
 				path: '/wp-abilities/v1/abilities/slug-automator/generate-slug/run',
 				method: 'POST',
 				data: {
-					input: { title, context: { type: 'post', id } },
+					input: {
+						title,
+						context: { type: 'post', id },
+						avoid: slug ?? '',
+					},
 				},
 			} );
 			await editPost( { slug: response.slug } );

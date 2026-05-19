@@ -21,12 +21,21 @@ class Slugifier {
 	 *
 	 * If WordPress 7.0 or later AI capabilities are available, it will generate the slug after translation.
 	 *
-	 * @param string $title Post title.
+	 * @param string      $title Post title.
+	 * @param string|null $avoid An existing slug to avoid returning.
 	 *
 	 * @return string|null Generated slug or null if AI translation is not available.
 	 */
-	public function generate( string $title ): ?string {
-		$slug = $this->translate_with_wp_ai( $title );
+	public function generate( string $title, ?string $avoid = null ): ?string {
+		$avoid_sanitized = null;
+		if ( null !== $avoid && '' !== $avoid ) {
+			$candidate = sanitize_title( $avoid );
+			if ( '' !== $candidate ) {
+				$avoid_sanitized = $candidate;
+			}
+		}
+
+		$slug = $this->translate_with_wp_ai( $title, $avoid_sanitized );
 
 		if ( null === $slug ) {
 			return null;
@@ -42,11 +51,12 @@ class Slugifier {
 	 *
 	 * Uses the WordPress 7.0 or later AI API when available.
 	 *
-	 * @param string $title Original title.
+	 * @param string      $title Original title.
+	 * @param string|null $avoid An existing slug that the result must differ from.
 	 *
 	 * @return string|null Translated text. Null if AI is not available.
 	 */
-	protected function translate_with_wp_ai( string $title ): ?string {
+	protected function translate_with_wp_ai( string $title, ?string $avoid = null ): ?string {
 		if ( ! function_exists( 'wp_ai_client_prompt' ) ) {
 			return null;
 		}
@@ -59,7 +69,12 @@ class Slugifier {
 			'required'   => array( 'result' ),
 		);
 
-		$result = wp_ai_client_prompt( "Title: {$title}" )
+		$user_prompt = "Title: {$title}";
+		if ( null !== $avoid && '' !== $avoid ) {
+			$user_prompt .= "\nDo not produce this slug: \"{$avoid}\". Generate a clearly different slug.";
+		}
+
+		$result = wp_ai_client_prompt( $user_prompt )
 			->using_system_instruction(
 				'Translate the provided title into concise English, then create a URL slug from the English translation. ' .
 				'If the title is not in English, translate it semantically into English. ' .
