@@ -17,6 +17,7 @@ npm run test:php     # Run PHPUnit tests on wp-env
 npm install        # Install dependencies
 npm run build      # Production build → build/
 npm start          # Development watch mode
+npm run format     # Format JS/TS/CSS/JSON files
 npm run lint:js    # ESLint
 npm run lint:style # Stylelint
 ```
