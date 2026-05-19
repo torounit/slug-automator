@@ -89,6 +89,11 @@ class Generate_Slug_Ability {
 							),
 							'required'    => array( 'type', 'id' ),
 						),
+						'avoid'   => array(
+							'type'              => 'string',
+							'sanitize_callback' => 'sanitize_title',
+							'description'       => __( 'Optional. An existing slug that the generated slug must differ from.', 'slug-automator' ),
+						),
 					),
 					'required'   => array( 'title', 'context' ),
 				),
@@ -116,7 +121,7 @@ class Generate_Slug_Ability {
 	 * @return array|\WP_Error
 	 */
 	public function execute_callback( array $input ): array|\WP_Error {
-		$slug = $this->slugifier->generate( $input['title'] );
+		$slug = $this->slugifier->generate( $input['title'], $input['avoid'] ?? null );
 
 		if ( null === $slug ) {
 			return new \WP_Error(
