@@ -233,10 +233,6 @@ class Generate_Slug_Ability_Test extends \WP_UnitTestCase {
 	 * register() adds actions when Abilities API is available.
 	 */
 	public function test_register_adds_hooks_when_api_available(): void {
-		if ( ! function_exists( 'wp_register_ability_category' ) || ! function_exists( 'wp_register_ability' ) ) {
-			$this->markTestSkipped( 'Abilities API not available.' );
-		}
-
 		$this->ability->register();
 
 		$this->assertNotFalse(

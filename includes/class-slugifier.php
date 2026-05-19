@@ -57,10 +57,6 @@ class Slugifier {
 	 * @return string|null Translated text. Null if AI is not available.
 	 */
 	protected function translate_with_wp_ai( string $title, ?string $avoid = null ): ?string {
-		if ( ! function_exists( 'wp_ai_client_prompt' ) ) {
-			return null;
-		}
-
 		$schema = array(
 			'type'       => 'object',
 			'properties' => array(
@@ -85,31 +81,26 @@ class Slugifier {
 			)
 			->using_temperature( 0.7 )
 			->as_json_response( $schema )
-			->using_model_preference(
-				array(
-					'anthropic',
-					'claude-haiku-4-5',
-				),
-				array(
-					'google',
-					'gemini-3.1-flash-lite',
-				),
-				array(
-					'google',
-					'gemini-2.5-flash',
-				),
-				array(
-					'openai',
-					'gpt-4o-mini',
-				),
-				array(
-					'openai',
-					'gpt-4.1',
-				),
-			)
+			->using_model_preference( ...$this->model_preferences() )
 			->generate_text();
 
 		return $this->parse_response( $result );
+	}
+
+	/**
+	 * Returns the preferred models to use for slug generation, in order of preference.
+	 *
+	 * @return array<int, array{0: string, 1: string}>
+	 */
+	protected function model_preferences(): array {
+		$models = array(
+			array( 'anthropic', 'claude-haiku-4-5' ),
+			array( 'google', 'gemini-3.1-flash-lite' ),
+			array( 'openai', 'gpt-5.4-nano' ),
+			array( 'openai', 'gpt-5-nano' ),
+		);
+
+		return apply_filters( 'slug_automator_model_preferences', $models );
 	}
 
 	/**
