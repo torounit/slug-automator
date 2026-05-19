@@ -61,11 +61,14 @@ class Slugifier {
 
 		$result = wp_ai_client_prompt( "Title: {$title}" )
 			->using_system_instruction(
-				'Convert the provided title into a concise English URL slug. ' .
-				'Use only lowercase letters, numbers, and hyphens. ' .
-				'Do not use spaces or special characters. '
+				'Translate the provided title into concise English, then create a URL slug from the English translation. ' .
+				'If the title is not in English, translate it semantically into English. ' .
+				'Do NOT transliterate or romanize non-English text. ' .
+				'For example, the Japanese title "こんにちは" should become "hello", not "konnichiha". ' .
+				'Use only lowercase ASCII letters, numbers, and hyphens. ' .
+				'Do not use spaces or special characters.'
 			)
-			->using_temperature( 0.1 )
+			->using_temperature( 0.7 )
 			->as_json_response( $schema )
 			->using_model_preference(
 				array(
