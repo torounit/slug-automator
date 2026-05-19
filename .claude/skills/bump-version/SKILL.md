@@ -1,3 +1,8 @@
+---
+name: bump-version
+description: Use when the user wants to bump the plugin version (e.g. "bump version", "/bump-version").
+---
+
 # Bump Version Skill
 
 Use this skill when the user wants to bump the plugin version (e.g. "bump version", "/bump-version").
