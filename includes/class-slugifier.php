@@ -57,10 +57,6 @@ class Slugifier {
 	 * @return string|null Translated text. Null if AI is not available.
 	 */
 	protected function translate_with_wp_ai( string $title, ?string $avoid = null ): ?string {
-		if ( ! function_exists( 'wp_ai_client_prompt' ) ) {
-			return null;
-		}
-
 		$schema = array(
 			'type'       => 'object',
 			'properties' => array(
