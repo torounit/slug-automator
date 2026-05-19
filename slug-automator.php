@@ -3,7 +3,7 @@
  * Plugin Name:       Slug Automator
  * Plugin URI:        https://github.com/torounit/slug-automator
  * Description:       Automates slug generation for WordPress posts.
- * Version:           0.3.1
+ * Version:           0.4.0
  * Requires at least: 7.0
  * Requires PHP:      8.2
  * Author:            Toro_Unit
