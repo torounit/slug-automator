@@ -73,49 +73,82 @@ class Generate_Slug_Ability_Test extends \WP_UnitTestCase {
 		$this->assertSame( 'slug_automator_generate_failed', $result->get_error_code() );
 	}
 
-	// --- check_permission() without context ---
+	// --- permission_callback() — invalid context ---
 
 	/**
-	 * check_permission() returns true for user with edit_posts.
+	 * permission_callback() returns WP_Error when context is missing.
 	 */
-	public function test_check_permission_returns_true_with_edit_posts_cap(): void {
+	public function test_check_permission_returns_wp_error_when_context_missing(): void {
 		$user_id = self::factory()->user->create( array( 'role' => 'editor' ) );
-		wp_set_current_user( $user_id );
-
-		$result = $this->ability->permission_callback( array( 'title' => 'test' ) );
-
-		$this->assertTrue( $result );
-	}
-
-	/**
-	 * check_permission() returns WP_Error for user without edit_posts.
-	 */
-	public function test_check_permission_returns_wp_error_without_edit_posts_cap(): void {
-		$user_id = self::factory()->user->create( array( 'role' => 'subscriber' ) );
 		wp_set_current_user( $user_id );
 
 		$result = $this->ability->permission_callback( array( 'title' => 'test' ) );
 
 		$this->assertInstanceOf( \WP_Error::class, $result );
-		$this->assertSame( 'insufficient_capabilities', $result->get_error_code() );
+		$this->assertSame( 'invalid_context', $result->get_error_code() );
 	}
 
 	/**
-	 * check_permission() treats non-numeric context as no post_id (edit_posts fallback).
+	 * permission_callback() returns WP_Error when context is missing type.
 	 */
-	public function test_check_permission_with_non_numeric_context_falls_back_to_edit_posts(): void {
+	public function test_check_permission_returns_wp_error_when_context_type_missing(): void {
 		$user_id = self::factory()->user->create( array( 'role' => 'editor' ) );
 		wp_set_current_user( $user_id );
 
-		$result = $this->ability->permission_callback( array( 'title' => 'test', 'context' => 'some extra context' ) );
+		$result = $this->ability->permission_callback(
+			array(
+				'title'   => 'test',
+				'context' => array( 'id' => 1 ),
+			)
+		);
 
-		$this->assertTrue( $result );
+		$this->assertInstanceOf( \WP_Error::class, $result );
+		$this->assertSame( 'invalid_context', $result->get_error_code() );
 	}
 
-	// --- check_permission() with numeric context (post_id) ---
+	/**
+	 * permission_callback() returns WP_Error when context is missing id.
+	 */
+	public function test_check_permission_returns_wp_error_when_context_id_missing(): void {
+		$user_id = self::factory()->user->create( array( 'role' => 'editor' ) );
+		wp_set_current_user( $user_id );
+
+		$result = $this->ability->permission_callback(
+			array(
+				'title'   => 'test',
+				'context' => array( 'type' => 'post' ),
+			)
+		);
+
+		$this->assertInstanceOf( \WP_Error::class, $result );
+		$this->assertSame( 'invalid_context', $result->get_error_code() );
+	}
 
 	/**
-	 * check_permission() with post_id returns true when user can edit that post.
+	 * permission_callback() returns WP_Error for unsupported context type.
+	 */
+	public function test_check_permission_returns_wp_error_for_unsupported_context_type(): void {
+		$user_id = self::factory()->user->create( array( 'role' => 'editor' ) );
+		wp_set_current_user( $user_id );
+
+		$result = $this->ability->permission_callback(
+			array(
+				'title'   => 'test',
+				'context' => array(
+					'type' => 'term',
+					'id'   => 1,
+				),
+			)
+		);
+
+		$this->assertInstanceOf( \WP_Error::class, $result );
+		$this->assertSame( 'unsupported_context_type', $result->get_error_code() );
+	}
+
+	// --- permission_callback() — post context ---
+
+	/**
+	 * permission_callback() returns true when user can edit the given post.
 	 */
 	public function test_check_permission_with_post_id_returns_true_for_owner(): void {
 		$user_id = self::factory()->user->create( array( 'role' => 'author' ) );
@@ -123,26 +156,42 @@ class Generate_Slug_Ability_Test extends \WP_UnitTestCase {
 
 		$post_id = self::factory()->post->create( array( 'post_author' => $user_id ) );
 
-		$result = $this->ability->permission_callback( array( 'title' => 'test', 'context' => (string) $post_id ) );
+		$result = $this->ability->permission_callback(
+			array(
+				'title'   => 'test',
+				'context' => array(
+					'type' => 'post',
+					'id'   => $post_id,
+				),
+			)
+		);
 
 		$this->assertTrue( $result );
 	}
 
 	/**
-	 * check_permission() with non-existent post_id returns WP_Error.
+	 * permission_callback() returns WP_Error when post does not exist.
 	 */
 	public function test_check_permission_with_nonexistent_post_id_returns_wp_error(): void {
 		$user_id = self::factory()->user->create( array( 'role' => 'editor' ) );
 		wp_set_current_user( $user_id );
 
-		$result = $this->ability->permission_callback( array( 'title' => 'test', 'context' => '999999' ) );
+		$result = $this->ability->permission_callback(
+			array(
+				'title'   => 'test',
+				'context' => array(
+					'type' => 'post',
+					'id'   => 999999,
+				),
+			)
+		);
 
 		$this->assertInstanceOf( \WP_Error::class, $result );
 		$this->assertSame( 'post_not_found', $result->get_error_code() );
 	}
 
 	/**
-	 * check_permission() returns WP_Error when user cannot edit another user's post.
+	 * permission_callback() returns WP_Error when user cannot edit the post.
 	 */
 	public function test_check_permission_with_post_id_returns_wp_error_for_other_user(): void {
 		$author_id = self::factory()->user->create( array( 'role' => 'author' ) );
@@ -151,7 +200,15 @@ class Generate_Slug_Ability_Test extends \WP_UnitTestCase {
 
 		$post_id = self::factory()->post->create( array( 'post_author' => $author_id ) );
 
-		$result = $this->ability->permission_callback( array( 'title' => 'test', 'context' => (string) $post_id ) );
+		$result = $this->ability->permission_callback(
+			array(
+				'title'   => 'test',
+				'context' => array(
+					'type' => 'post',
+					'id'   => $post_id,
+				),
+			)
+		);
 
 		$this->assertInstanceOf( \WP_Error::class, $result );
 		$this->assertSame( 'insufficient_capabilities', $result->get_error_code() );
