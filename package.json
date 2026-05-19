@@ -16,14 +16,12 @@
 	},
 	"bugs": "https://github.com/torounit/slug-automator/issues",
 	"dependencies": {
-		"@wordpress/api-fetch": "*",
+		"@wordpress/api-fetch": "^7.45.0",
 		"@wordpress/components": "^33.0.0",
-		"@wordpress/data": "*",
-		"@wordpress/dom-ready": "*",
+		"@wordpress/data": "^10.46.0",
 		"@wordpress/editor": "^14.45.0",
-		"@wordpress/element": "*",
-		"@wordpress/hooks": "*",
-		"@wordpress/notices": "*",
+		"@wordpress/element": "^6.45.0",
+		"@wordpress/notices": "^5.45.0",
 		"@wordpress/plugins": "^7.45.0"
 	},
 	"devDependencies": {
