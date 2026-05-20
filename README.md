@@ -15,7 +15,7 @@ Automatically generates URL-friendly slugs from post titles using the WordPress 
 
 Slug Automator automatically generates slugs from WordPress post titles using the [AI Client](https://make.wordpress.org/core/2026/03/24/introducing-the-ai-client-in-wordpress-7-0/) introduced in WordPress 7.0.
 
-Writing post titles in Japanese or any other non-English language? Slug Automator uses AI to translate them into clean, English URL-friendly slugs — no manual input required. Automatic generation runs on publish only when the slug field is empty, so any slug you set yourself is never overwritten. You can also generate or regenerate a slug on demand with the "Generate Slug" button in the block editor.
+Writing post titles in any other non-English language? Slug Automator uses AI to translate them into clean, English URL-friendly slugs — no manual input required. Automatic generation runs on publish only when the slug field is empty, so any slug you set yourself is never overwritten. You can also generate or regenerate a slug on demand with the "Generate Slug" button in the block editor.
 
 Because it relies on the WordPress AI Client, it works with any AI provider configured on your site (Anthropic, Google, OpenAI, and more).
 
