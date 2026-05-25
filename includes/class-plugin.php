@@ -77,6 +77,9 @@ class Plugin {
 	 * @return void
 	 */
 	public function enqueue_block_editor_assets(): void {
+		wp_enqueue_script_module( '@wordpress/core-abilities' );
+		wp_enqueue_script_module( '@wordpress/abilities' );
+
 		$asset_file = SLUG_AUTOMATOR_PLUGIN_DIR . 'build/index.asset.php';
 
 		if ( ! file_exists( $asset_file ) ) {
