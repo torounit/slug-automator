@@ -56,7 +56,10 @@ class Plugin {
 	 * @return bool
 	 */
 	public function has_ai_connector(): bool {
-		foreach ( wp_get_connectors() as $connector ) {
+		$connectors    = wp_get_connectors();
+		$has_connector = false;
+
+		foreach ( $connectors as $connector ) {
 			if ( 'ai_provider' !== $connector['type'] ) {
 				continue;
 			}
@@ -64,11 +67,21 @@ class Plugin {
 			$auth = $connector['authentication'];
 
 			if ( 'api_key' === $auth['method'] && ! empty( $auth['setting_name'] ) && '' !== get_option( $auth['setting_name'], '' ) ) {
-				return true;
+				$has_connector = true;
+				break;
 			}
 		}
 
-		return false;
+		/**
+		 * Filters whether an AI provider connector with credentials is available.
+		 *
+		 * Allows third-party plugins to declare connector availability for
+		 * connectors that do not rely on API key settings.
+		 *
+		 * @param bool  $has_connector Whether an AI connector is available.
+		 * @param array $connectors    The registered connectors.
+		 */
+		return (bool) apply_filters( 'wpai_has_ai_credentials', $has_connector, $connectors );
 	}
 
 	/**
