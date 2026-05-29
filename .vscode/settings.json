@@ -5,5 +5,8 @@
 	"phpsab.executablePathCS": "./vendor/bin/phpcs",
 	"phpsab.executablePathCBF": "./vendor/bin/phpcbf",
 	"phpsab.autoRulesetSearch": true,
-	"phpsab.standard": "phpcs.xml.dist"
+	"phpsab.standard": "phpcs.xml.dist",
+	"chat.tools.terminal.autoApprove": {
+		"gh": true
+	}
 }
