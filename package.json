@@ -26,7 +26,7 @@
 		"@wordpress/plugins": "^7.45.0"
 	},
 	"devDependencies": {
-		"@wordpress/env": "^11.3.0",
+		"@wordpress/env": "^11.7.0",
 		"@wordpress/scripts": "^31.8.0",
 		"husky": "^9.1.7",
 		"lint-staged": "^16.4.0",
