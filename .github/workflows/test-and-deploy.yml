@@ -29,6 +29,34 @@ jobs:
             - name: Install Node dependencies
               run: npm ci
 
+            - name: Hotpatch @wordpress/env (Gutenberg PR #78828)
+              run: |
+                  node <<'NODE'
+                  const fs = require('fs');
+                  const file = 'node_modules/@wordpress/env/lib/download-sources.js';
+                  let src = fs.readFileSync(file, 'utf8');
+
+                  const beforeRequire = "const got = require( 'got' );\nconst SimpleGit = require( 'simple-git' );";
+                  const afterRequire = "const got = require( 'got' );\nconst AdmZip = require( 'adm-zip' );\nconst SimpleGit = require( 'simple-git' );";
+
+                  const beforeExtractImport = "const extractZip = util.promisify( require( 'extract-zip' ) );\nconst { rimraf } = require( 'rimraf' );";
+                  const afterExtractImport = "const { rimraf } = require( 'rimraf' );";
+
+                  const beforeExtractCall = "\tawait extractZip( zipName, { dir: tempDir } );";
+                  const afterExtractCall = "\tconst zip = new AdmZip( zipName );\n\tawait util.promisify( zip.extractAllToAsync.bind( zip ) )(\n\t\ttempDir,\n\t\t/* overwrite */ true,\n\t\t/* keepOriginalPermission */ false\n\t);";
+
+                  src = src.replace(beforeRequire, afterRequire);
+                  src = src.replace(beforeExtractImport, afterExtractImport);
+                  src = src.replace(beforeExtractCall, afterExtractCall);
+
+                  if (!src.includes("const AdmZip = require( 'adm-zip' );") || src.includes("extract-zip")) {
+                    throw new Error('Failed to apply @wordpress/env hotpatch');
+                  }
+
+                  fs.writeFileSync(file, src);
+                  console.log('Hotpatch applied:', file);
+                  NODE
+
             - name: Install Composer dependencies
               run: composer install --no-progress --no-interaction
 
