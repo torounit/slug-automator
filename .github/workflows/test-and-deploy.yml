@@ -29,33 +29,16 @@ jobs:
             - name: Install Node dependencies
               run: npm ci
 
-            - name: Hotpatch @wordpress/env (Gutenberg PR #78828)
+            - name: Hotpatch @wordpress/env from Gutenberg PR #78828
               run: |
-                  node <<'NODE'
-                  const fs = require('fs');
-                  const file = 'node_modules/@wordpress/env/lib/download-sources.js';
-                  let src = fs.readFileSync(file, 'utf8');
-
-                  const beforeRequire = "const got = require( 'got' );\nconst SimpleGit = require( 'simple-git' );";
-                  const afterRequire = "const got = require( 'got' );\nconst AdmZip = require( 'adm-zip' );\nconst SimpleGit = require( 'simple-git' );";
-
-                  const beforeExtractImport = "const extractZip = util.promisify( require( 'extract-zip' ) );\nconst { rimraf } = require( 'rimraf' );";
-                  const afterExtractImport = "const { rimraf } = require( 'rimraf' );";
-
-                  const beforeExtractCall = "\tawait extractZip( zipName, { dir: tempDir } );";
-                  const afterExtractCall = "\tconst zip = new AdmZip( zipName );\n\tawait util.promisify( zip.extractAllToAsync.bind( zip ) )(\n\t\ttempDir,\n\t\t/* overwrite */ true,\n\t\t/* keepOriginalPermission */ false\n\t);";
-
-                  src = src.replace(beforeRequire, afterRequire);
-                  src = src.replace(beforeExtractImport, afterExtractImport);
-                  src = src.replace(beforeExtractCall, afterExtractCall);
-
-                  if (!src.includes("const AdmZip = require( 'adm-zip' );") || src.includes("extract-zip")) {
-                    throw new Error('Failed to apply @wordpress/env hotpatch');
-                  }
-
-                  fs.writeFileSync(file, src);
-                  console.log('Hotpatch applied:', file);
-                  NODE
+                  if ! npm ls adm-zip --depth=0 >/dev/null 2>&1; then
+                      npm install --no-save adm-zip@^0.5.9
+                  fi
+                  curl -fsSL \
+                      https://raw.githubusercontent.com/WordPress/gutenberg/23d0f38cddf3f53a2b182bf987a2e237c779f7d0/packages/env/lib/download-sources.js \
+                      -o node_modules/@wordpress/env/lib/download-sources.js
+                  grep -q "const AdmZip = require( 'adm-zip' );" node_modules/@wordpress/env/lib/download-sources.js
+                  ! grep -q "extract-zip" node_modules/@wordpress/env/lib/download-sources.js
 
             - name: Install Composer dependencies
               run: composer install --no-progress --no-interaction
