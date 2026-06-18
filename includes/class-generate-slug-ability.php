@@ -80,7 +80,7 @@ class Generate_Slug_Ability {
 								'type' => array(
 									'type'        => 'string',
 									'enum'        => array( 'post' ),
-									'description' => __( 'The kind of object. Currently only "post" is supported.', 'slug-automator' ),
+									'description' => __( 'The object type. Currently only "post" is supported.', 'slug-automator' ),
 								),
 								'id'   => array(
 									'type'        => 'integer',
@@ -92,7 +92,7 @@ class Generate_Slug_Ability {
 						'avoid'   => array(
 							'type'              => 'string',
 							'sanitize_callback' => 'sanitize_title',
-							'description'       => __( 'Optional. An existing slug that the generated slug must differ from.', 'slug-automator' ),
+							'description'       => __( 'Optional. If set, the generated slug will not match this value.', 'slug-automator' ),
 						),
 					),
 					'required'   => array( 'title', 'context' ),
@@ -126,7 +126,7 @@ class Generate_Slug_Ability {
 		if ( null === $slug ) {
 			return new \WP_Error(
 				'slug_automator_generate_failed',
-				__( 'Failed to generate slug. AI may be unavailable.', 'slug-automator' )
+				__( 'Failed to generate slug. The AI service may be unavailable.', 'slug-automator' )
 			);
 		}
 
