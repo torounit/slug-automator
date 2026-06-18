@@ -92,7 +92,7 @@ class Generate_Slug_Ability {
 						'avoid'   => array(
 							'type'              => 'string',
 							'sanitize_callback' => 'sanitize_title',
-							'description'       => __( 'Optional. An existing slug that the generated slug must differ from.', 'slug-automator' ),
+							'description'       => __( 'Optional. If set, the generated slug will not match this value.', 'slug-automator' ),
 						),
 					),
 					'required'   => array( 'title', 'context' ),
