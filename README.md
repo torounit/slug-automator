@@ -19,7 +19,7 @@ Writing post titles in any other non-English language? Slug Automator uses AI to
 
 Because it relies on the WordPress AI Client, it works with any AI provider configured on your site (Anthropic, Google, OpenAI, and more).
 
-Github: [https://github.com/torounit/slug-automator](https://github.com/torounit/slug-automator)
+GitHub: [https://github.com/torounit/slug-automator](https://github.com/torounit/slug-automator)
 
 ### Features
 
