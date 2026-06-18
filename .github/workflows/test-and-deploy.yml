@@ -10,6 +10,62 @@ on:
             - '**.md'
 
 jobs:
+    lint-js:
+        name: Lint JS
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: lts/*
+                  cache: npm
+
+            - name: Install Node dependencies
+              run: npm ci
+
+            - name: Run JS lint
+              run: npm run lint:js
+
+            - name: Run package.json lint
+              run: npm run lint:pkg-json
+
+    lint-php:
+        name: Lint PHP
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '8.2'
+
+            - name: Install Composer dependencies
+              run: composer install --no-progress --no-interaction
+
+            - name: Run PHP lint
+              run: composer lint
+
+    typecheck:
+        name: Type Check
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: lts/*
+                  cache: npm
+
+            - name: Install Node dependencies
+              run: npm ci
+
+            - name: Run type check
+              run: npm run lint:type
+
     phpunit:
         name: PHPUnit
         runs-on: ubuntu-latest
@@ -38,7 +94,7 @@ jobs:
 
     release:
         name: Upload Release Asset
-        needs: [phpunit]
+        needs: [lint-js, lint-php, typecheck, phpunit]
         if: startsWith(github.ref, 'refs/tags/')
         runs-on: ubuntu-latest
         permissions:

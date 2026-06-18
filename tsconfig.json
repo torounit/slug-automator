@@ -5,6 +5,7 @@
 		"moduleResolution": "bundler",
 		"jsx": "react-jsx",
 		"strict": true,
+		"skipLibCheck": true,
 		"noEmit": true,
 		"rootDir": "src"
 	},
