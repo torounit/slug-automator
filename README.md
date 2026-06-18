@@ -1,6 +1,7 @@
 # Slug Automator
 
 Contributors: Toro_Unit  
+Donate link: <https://www.paypal.me/torounit>  
 Tags: slug, permalink, ai  
 Requires at least: 7.0  
 Tested up to: 7.0  
@@ -44,6 +45,8 @@ This plugin uses the WordPress AI Client (requires WordPress 7.0 or later). It w
 Not automatically. Auto-generation on publish runs only when the slug field is empty. If you want to replace an existing slug, you can do so manually with the "Generate Slug" button in the block editor.
 
 ## Changelog
+
+### Unreleased
 
 ### 0.4.1
 
