@@ -7,6 +7,7 @@
 		"https://downloads.wordpress.org/plugin/ai-provider-for-google.zip",
 		"https://downloads.wordpress.org/plugin/ai-provider-for-openai.zip"
 	],
+	"autoPort": true,
 	"port": 8889,
 	"config": {
 		"WP_DEBUG": true
