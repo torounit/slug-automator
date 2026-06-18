@@ -1,6 +1,7 @@
 {
 	"$schema": "https://schemas.wp.org/trunk/wp-env.json",
 	"core": "https://wordpress.org/nightly-builds/wordpress-latest.zip",
+	"autoPort": true,
 	"testsEnvironment": false,
 	"plugins": [
 		".",
