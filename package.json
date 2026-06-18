@@ -30,13 +30,15 @@
 		"@wordpress/scripts": "^31.8.0",
 		"husky": "^9.1.7",
 		"lint-staged": "^16.4.0",
-		"npm-run-all": "^4.1.5"
+		"npm-run-all": "^4.1.5",
+		"typescript": "^6.0.3"
 	},
 	"scripts": {
 		"build": "wp-scripts build",
 		"start": "wp-scripts start",
 		"format": "wp-scripts format",
 		"lint:js": "wp-scripts lint-js",
+		"lint:type": "tsc",
 		"lint:style": "wp-scripts lint-style",
 		"lint:pkg-json": "wp-scripts lint-pkg-json",
 		"lint:md": "wp-scripts lint-md-docs",
@@ -55,7 +57,10 @@
 			"vendor/bin/phpcs"
 		],
 		"*.{js,ts,json,yaml,yml}": "wp-scripts format",
-		"*.{js,ts}": "wp-scripts lint-js",
+		"*.{js,ts}": [
+			"wp-scripts lint-js",
+			"npm run lint:type"
+		],
 		"*.{css,scss}": "wp-scripts lint-style",
 		"package.json": "wp-scripts lint-pkg-json",
 		"*.md": "wp-scripts lint-md-docs"
