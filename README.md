@@ -1,14 +1,14 @@
 # Slug Automator
 
 Contributors: Toro_Unit  
-Donate link: <https://www.paypal.me/torounit>  
+Donate link: https://www.paypal.me/torounit  
 Tags: slug, permalink, ai  
 Requires at least: 7.0  
 Tested up to: 7.0  
 Stable tag: 0.4.1  
 Requires PHP: 8.2  
 License: GPLv2 or later  
-License URI: <https://www.gnu.org/licenses/gpl-2.0.html>  
+License URI: https://www.gnu.org/licenses/gpl-2.0.html  
 
 Automatically generates URL-friendly slugs from post titles using the WordPress AI Client.
 

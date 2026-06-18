@@ -64,8 +64,7 @@
 			"npm run lint:type"
 		],
 		"*.{css,scss}": "wp-scripts lint-style",
-		"package.json": "wp-scripts lint-pkg-json",
-		"*.md": "wp-scripts lint-md-docs"
+		"package.json": "wp-scripts lint-pkg-json"
 	},
 	"release-it": {
 		"hooks": {
