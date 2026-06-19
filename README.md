@@ -48,6 +48,8 @@ Not automatically. Auto-generation on publish runs only when the slug field is e
 
 ### Unreleased
 
+* Add `wpai_has_ai_credentials` filter to allow third-party plugins to declare AI connector availability for connectors that don't rely on API key settings.
+
 ### 0.4.1
 
 * Optimize model preferences for slug generation to improve output quality.
