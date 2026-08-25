@@ -46,6 +46,18 @@ Not automatically. Auto-generation on publish runs only when the slug field is e
 
 ## Changelog
 
+### Unreleased
+
+* Record the changelog entries that were missing for 0.5.1 and 0.5.2.
+
+### 0.5.2
+
+* Bump "Tested up to" to WordPress 7.1.
+
+### 0.5.1
+
+* Update `.distignore` so development-only files are excluded from the release zip.
+
 ### 0.5.0
 
 * Add `wpai_has_ai_credentials` filter to allow third-party plugins to declare AI connector availability for connectors that don't rely on API key settings.
