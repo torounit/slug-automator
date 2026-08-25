@@ -4,7 +4,7 @@ Contributors: Toro_Unit
 Donate link: https://www.paypal.me/torounit  
 Tags: slug, permalink, ai  
 Requires at least: 7.0  
-Tested up to: 7.0  
+Tested up to: 7.1  
 Stable tag: 0.5.1  
 Requires PHP: 8.2  
 License: GPLv2 or later  
