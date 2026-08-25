@@ -14,10 +14,10 @@ jobs:
         name: Lint JS
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v7
 
             - name: Setup Node.js
-              uses: actions/setup-node@v4
+              uses: actions/setup-node@v7
               with:
                   node-version: lts/*
                   cache: npm
@@ -35,7 +35,7 @@ jobs:
         name: Lint PHP
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v7
 
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
@@ -52,10 +52,10 @@ jobs:
         name: Type Check
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v7
 
             - name: Setup Node.js
-              uses: actions/setup-node@v4
+              uses: actions/setup-node@v7
               with:
                   node-version: lts/*
                   cache: npm
@@ -70,10 +70,10 @@ jobs:
         name: PHPUnit
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v7
 
             - name: Setup Node.js
-              uses: actions/setup-node@v4
+              uses: actions/setup-node@v7
               with:
                   node-version: lts/*
                   cache: npm
@@ -103,14 +103,14 @@ jobs:
             contents: write
         steps:
             - name: Checkout code
-              uses: actions/checkout@v4
+              uses: actions/checkout@v7
 
             - name: Get tag
               id: tag
               run: echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
 
             - name: Setup Node.js
-              uses: actions/setup-node@v4
+              uses: actions/setup-node@v7
               with:
                   node-version: lts/*
                   cache: npm
@@ -136,7 +136,7 @@ jobs:
                   SLUG: slug-automator
 
             - name: Upload release asset
-              uses: softprops/action-gh-release@v2
+              uses: softprops/action-gh-release@v3
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               with:
