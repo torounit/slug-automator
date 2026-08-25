@@ -46,6 +46,8 @@ Not automatically. Auto-generation on publish runs only when the slug field is e
 
 ## Changelog
 
+### Unreleased
+
 ### 0.5.3
 
 * Record the changelog entries that were missing for 0.5.1 and 0.5.2.
