@@ -97,8 +97,9 @@ class Slugifier {
 			array( 'anthropic', 'claude-haiku-4-5' ),
 			array( 'google', 'gemini-3.5-flash-lite' ),
 			array( 'google', 'gemini-3.1-flash-lite' ),
+			array( 'openai', 'gpt-6-luna' ),
+			array( 'openai', 'gpt-5.6-luna' ),
 			array( 'openai', 'gpt-5.4-nano' ),
-			array( 'openai', 'gpt-5-nano' ),
 		);
 
 		return apply_filters( 'slug_automator_model_preferences', $models );
