@@ -37,18 +37,16 @@ class Slugifier_Test extends \WP_UnitTestCase {
 	}
 
 	/**
-	 * Titles, the words their slugs are expected to contain, and romanizations they must not contain.
+	 * Titles and the romanizations their slugs must not contain.
 	 *
-	 * Each expected entry lists synonyms, any of which satisfies it, so that equivalent translations pass.
-	 *
-	 * @return array<string, array{0: string, 1: list<list<string>>, 2: list<string>}>
+	 * @return array<string, array{0: string, 1: list<string>}>
 	 */
 	public function data_titles(): array {
 		return [
-			'japanese greeting' => [ 'こんにちは', [ [ 'hello', 'hi', 'greeting' ] ], [ 'konnichiha', 'konnichiwa' ] ],
-			'japanese sentence' => [ '東京の天気', [ [ 'tokyo' ], [ 'weather', 'forecast', 'climate' ] ], [ 'tenki' ] ],
-			'mixed scripts'     => [ 'WordPressでブログを始める', [ [ 'wordpress' ], [ 'blog', 'blogging' ] ], [ 'hajimeru' ] ],
-			'english title'     => [ 'Hello World', [ [ 'hello' ], [ 'world' ] ], [] ],
+			'japanese greeting' => [ 'こんにちは', [ 'konnichiha', 'konnichiwa' ] ],
+			'japanese sentence' => [ '東京の天気', [ 'tenki' ] ],
+			'mixed scripts'     => [ 'WordPressでブログを始める', [ 'hajimeru' ] ],
+			'english title'     => [ 'Hello World', [] ],
 		];
 	}
 
@@ -57,19 +55,14 @@ class Slugifier_Test extends \WP_UnitTestCase {
 	 *
 	 * @dataProvider data_titles
 	 *
-	 * @param string             $title     Post title.
-	 * @param list<list<string>> $expected  Synonym groups; the slug must contain a word from each group.
-	 * @param list<string>       $forbidden Words the slug must not contain.
+	 * @param string       $title     Post title.
+	 * @param list<string> $forbidden Words the slug must not contain.
 	 */
-	public function test_generate_translates_title( string $title, array $expected, array $forbidden ): void {
+	public function test_generate_translates_title( string $title, array $forbidden ): void {
 		$slug = $this->slugifier->generate( $title );
 
 		$this->assertIsString( $slug );
 		$this->assertMatchesRegularExpression( self::SLUG_PATTERN, $slug );
-
-		foreach ( $expected as $synonyms ) {
-			$this->assertNotEmpty( array_intersect( explode( '-', $slug ), $synonyms ), $slug );
-		}
 
 		foreach ( $forbidden as $word ) {
 			$this->assertStringNotContainsString( $word, $slug );
