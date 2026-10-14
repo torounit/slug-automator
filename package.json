@@ -67,6 +67,9 @@
 		"package.json": "wp-scripts lint-pkg-json"
 	},
 	"release-it": {
+		"git": {
+			"requireBranch": "main"
+		},
 		"hooks": {
 			"before:bump": "bash ./bin/bump-version.sh ${version}"
 		},
