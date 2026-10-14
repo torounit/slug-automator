@@ -57,14 +57,6 @@ class Slugifier {
 	 * @return string|null Translated text. Null if AI is not available.
 	 */
 	protected function translate_with_wp_ai( string $title, ?string $avoid = null ): ?string {
-		$schema = array(
-			'type'       => 'object',
-			'properties' => array(
-				'result' => array( 'type' => 'string' ),
-			),
-			'required'   => array( 'result' ),
-		);
-
 		$user_prompt = "Title: {$title}";
 		if ( null !== $avoid && '' !== $avoid ) {
 			$user_prompt .= "\nDo not produce this slug: \"{$avoid}\". Generate a clearly different slug.";
@@ -79,11 +71,30 @@ class Slugifier {
 				'Use only lowercase ASCII letters, numbers, and hyphens. ' .
 				'Do not use spaces or special characters.'
 			)
-			->as_json_response( $schema )
+			->as_json_response( $this->response_schema() )
 			->using_model_preference( ...$this->model_preferences() )
 			->generate_text();
 
 		return $this->parse_response( $result );
+	}
+
+	/**
+	 * Returns the JSON schema the model must respond with.
+	 *
+	 * Providers with strict structured outputs (e.g. Anthropic, OpenAI) reject
+	 * object schemas that do not set `additionalProperties` to false.
+	 *
+	 * @return array<string, mixed> The response schema.
+	 */
+	protected function response_schema(): array {
+		return array(
+			'type'                 => 'object',
+			'properties'           => array(
+				'result' => array( 'type' => 'string' ),
+			),
+			'required'             => array( 'result' ),
+			'additionalProperties' => false,
+		);
 	}
 
 	/**

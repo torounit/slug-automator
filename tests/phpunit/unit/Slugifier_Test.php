@@ -85,4 +85,17 @@ class Slugifier_Test extends \WP_UnitTestCase {
 
 		$this->slugifier->generate( 'any title', '' );
 	}
+
+	/**
+	 * response_schema() returns a strict object schema accepted by strict structured outputs.
+	 */
+	public function test_response_schema_is_strict_object(): void {
+		$method = new \ReflectionMethod( Slugifier::class, 'response_schema' );
+		$schema = $method->invoke( new Slugifier() );
+
+		$this->assertSame( 'object', $schema['type'] );
+		$this->assertSame( [ 'result' ], $schema['required'] );
+		$this->assertFalse( $schema['additionalProperties'] );
+		$this->assertSame( 'string', $schema['properties']['result']['type'] );
+	}
 }
