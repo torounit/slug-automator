@@ -68,16 +68,8 @@ class Slugifier_Test extends \WP_UnitTestCase {
 		$this->assertMatchesRegularExpression( self::SLUG_PATTERN, $slug );
 
 		// Match by word prefix so that inflections such as "blogging" are accepted.
-		$words = explode( '-', $slug );
 		foreach ( $expected as $synonyms ) {
-			$matched = array_filter(
-				$words,
-				static fn ( string $word ): bool => (bool) array_filter(
-					$synonyms,
-					static fn ( string $synonym ): bool => str_starts_with( $word, $synonym )
-				)
-			);
-			$this->assertNotEmpty( $matched, sprintf( 'Slug "%s" contains none of: %s', $slug, implode( ', ', $synonyms ) ) );
+			$this->assertMatchesRegularExpression( '/(?:^|-)(?:' . implode( '|', $synonyms ) . ')/', $slug );
 		}
 
 		foreach ( $forbidden as $word ) {
