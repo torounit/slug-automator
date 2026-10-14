@@ -11,6 +11,16 @@ composer lint:fix         # Auto-fix with PHPCBF
 npm run test:php     # Run PHPUnit tests on wp-env
 ```
 
+The AI tests (`@group ai`) are skipped unless an AI provider API key is configured. To run them locally, create `.wp-env.test.override.json` (ignored by git), restart the test environment, and run `npm run test:php:base -- --group ai` to run only them:
+
+```json
+{
+	"config": {
+		"ANTHROPIC_API_KEY": "sk-ant-..."
+	}
+}
+```
+
 ### JavaScript / TypeScript
 
 ```bash
