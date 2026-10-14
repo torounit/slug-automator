@@ -69,6 +69,9 @@ jobs:
     phpunit:
         name: PHPUnit
         runs-on: ubuntu-latest
+        permissions:
+            id-token: write
+            contents: read
         steps:
             - uses: actions/checkout@v7
 
@@ -89,8 +92,50 @@ jobs:
             - name: Install Composer dependencies
               run: composer install --no-progress --no-interaction
 
+            # Runs the AI tests against Claude when Workload Identity Federation is configured.
+            # Pull requests from forks cannot request an OIDC token, so the AI tests are skipped there.
+            - name: Exchange GitHub OIDC token for a Claude API access token
+              id: claude
+              if: >-
+                  vars.ANTHROPIC_FEDERATION_RULE_ID != '' &&
+                  (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
+              env:
+                  ANTHROPIC_FEDERATION_RULE_ID: ${{ vars.ANTHROPIC_FEDERATION_RULE_ID }}
+                  ANTHROPIC_ORGANIZATION_ID: ${{ vars.ANTHROPIC_ORGANIZATION_ID }}
+                  ANTHROPIC_SERVICE_ACCOUNT_ID: ${{ vars.ANTHROPIC_SERVICE_ACCOUNT_ID }}
+                  ANTHROPIC_WORKSPACE_ID: ${{ vars.ANTHROPIC_WORKSPACE_ID }}
+              run: |
+                  jwt=$(curl -sS --fail-with-body -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+                      "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=https://api.anthropic.com" | jq -r .value)
+
+                  access_token=$(jq -n \
+                      --arg assertion "$jwt" \
+                      --arg federation_rule_id "$ANTHROPIC_FEDERATION_RULE_ID" \
+                      --arg organization_id "$ANTHROPIC_ORGANIZATION_ID" \
+                      --arg service_account_id "$ANTHROPIC_SERVICE_ACCOUNT_ID" \
+                      --arg workspace_id "$ANTHROPIC_WORKSPACE_ID" \
+                      '{
+                          grant_type: "urn:ietf:params:oauth:grant-type:jwt-bearer",
+                          assertion: $assertion,
+                          federation_rule_id: $federation_rule_id,
+                          organization_id: $organization_id,
+                          service_account_id: $service_account_id
+                      } + (if $workspace_id != "" then { workspace_id: $workspace_id } else {} end)' \
+                      | curl -sS --fail-with-body https://api.anthropic.com/v1/oauth/token \
+                          -H "content-type: application/json" --data @- \
+                      | jq -r .access_token)
+
+                  if [ -z "$access_token" ] || [ "$access_token" = "null" ]; then
+                      echo "::error::Failed to obtain a Claude API access token."
+                      exit 1
+                  fi
+
+                  echo "::add-mask::$access_token"
+                  jq -n --arg key "$access_token" '{ config: { ANTHROPIC_API_KEY: $key } }' > .wp-env.test.override.json
+
+            # Fail on skipped tests when a token is available so that a misconfigured key does not silently pass.
             - name: Run PHPUnit
-              run: npm run test:php
+              run: npm run test:php:setup && npm run test:php:base -- ${{ steps.claude.outcome == 'success' && '--fail-on-skipped' || '' }}
 
     release:
         name: Upload Release Asset
