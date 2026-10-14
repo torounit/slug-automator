@@ -4,6 +4,10 @@ on:
         tags: ['*']
 
 jobs:
+    lint:
+        name: Lint
+        uses: ./.github/workflows/lint.yml
+
     test:
         name: Test
         uses: ./.github/workflows/test.yml
@@ -14,7 +18,7 @@ jobs:
 
     release:
         name: Upload Release Asset
-        needs: test
+        needs: [lint, test]
         runs-on: ubuntu-latest
         permissions:
             attestations: write
