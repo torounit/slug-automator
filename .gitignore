@@ -17,3 +17,6 @@ Thumbs.db
 /wp-tests-config.php
 
 *.cache
+
+# Local wp-env overrides (may contain API keys)
+.wp-env*.override.json

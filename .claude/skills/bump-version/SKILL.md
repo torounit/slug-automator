@@ -11,7 +11,7 @@ Releases are handled by [release-it](https://github.com/release-it/release-it) v
 not by manually editing files. release-it determines the version, runs `bin/bump-version.sh` to update
 `slug-automator.php` and `README.md`, updates `package.json` itself, then commits, tags, pushes, and
 creates a GitHub release. Pushing the tag triggers the existing CI release job
-(`.github/workflows/test-and-deploy.yml`), which builds and deploys to WordPress.org.
+(`.github/workflows/release.yml`), which builds and deploys to WordPress.org.
 
 ## Steps
 
