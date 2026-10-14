@@ -81,9 +81,6 @@ class Slugifier {
 	/**
 	 * Returns the JSON schema the model must respond with.
 	 *
-	 * Providers with strict structured outputs (e.g. Anthropic, OpenAI) reject
-	 * object schemas that do not set `additionalProperties` to false.
-	 *
 	 * @return array<string, mixed> The response schema.
 	 */
 	protected function response_schema(): array {
