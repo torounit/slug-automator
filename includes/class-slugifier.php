@@ -79,7 +79,6 @@ class Slugifier {
 				'Use only lowercase ASCII letters, numbers, and hyphens. ' .
 				'Do not use spaces or special characters.'
 			)
-			->using_temperature( 0.7 )
 			->as_json_response( $schema )
 			->using_model_preference( ...$this->model_preferences() )
 			->generate_text();
@@ -94,7 +93,9 @@ class Slugifier {
 	 */
 	protected function model_preferences(): array {
 		$models = array(
+			array( 'anthropic', 'claude-haiku-5-5' ),
 			array( 'anthropic', 'claude-haiku-4-5' ),
+			array( 'google', 'gemini-3.5-flash-lite' ),
 			array( 'google', 'gemini-3.1-flash-lite' ),
 			array( 'openai', 'gpt-5.4-nano' ),
 			array( 'openai', 'gpt-5-nano' ),

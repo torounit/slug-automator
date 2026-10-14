@@ -48,6 +48,9 @@ Not automatically. Auto-generation on publish runs only when the slug field is e
 
 ### Unreleased
 
+* Prefer Claude Haiku 5.5 and Gemini 3.5 Flash-Lite for slug generation.
+* Stop sending a custom temperature so that models without sampling parameter support can be selected.
+
 ### 0.5.3
 
 * Record the changelog entries that were missing for 0.5.1 and 0.5.2.
