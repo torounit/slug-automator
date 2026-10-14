@@ -5,7 +5,7 @@ Donate link: https://www.paypal.me/torounit
 Tags: slug, permalink, ai  
 Requires at least: 7.0  
 Tested up to: 7.1  
-Stable tag: 0.5.3  
+Stable tag: 0.6.0  
 Requires PHP: 8.2  
 License: GPLv2 or later  
 License URI: https://www.gnu.org/licenses/gpl-2.0.html  
@@ -46,7 +46,7 @@ Not automatically. Auto-generation on publish runs only when the slug field is e
 
 ## Changelog
 
-### Unreleased
+### 0.6.0
 
 * Prefer Claude Haiku 5.5, Gemini 3.5 Flash-Lite, and GPT-6 Luna for slug generation.
 * Drop the deprecated gpt-5-nano from the model preferences.
