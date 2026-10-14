@@ -52,6 +52,7 @@ Not automatically. Auto-generation on publish runs only when the slug field is e
 * Drop the deprecated gpt-5-nano from the model preferences.
 * Stop sending a custom temperature so that models without sampling parameter support can be selected.
 * Fix slug generation failing with Anthropic and OpenAI by making the response schema strict (`additionalProperties: false`).
+* Specify preferred models by model ID instead of provider and model ID pairs.
 
 ### 0.5.3
 

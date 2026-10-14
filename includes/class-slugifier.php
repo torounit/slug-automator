@@ -81,9 +81,6 @@ class Slugifier {
 	/**
 	 * Returns the JSON schema the model must respond with.
 	 *
-	 * Providers with strict structured outputs (e.g. Anthropic, OpenAI) reject
-	 * object schemas that do not set `additionalProperties` to false.
-	 *
 	 * @return array<string, mixed> The response schema.
 	 */
 	protected function response_schema(): array {
@@ -100,17 +97,17 @@ class Slugifier {
 	/**
 	 * Returns the preferred models to use for slug generation, in order of preference.
 	 *
-	 * @return array<int, array{0: string, 1: string}>
+	 * @return list<string|array{0: string, 1: string}>
 	 */
 	protected function model_preferences(): array {
 		$models = array(
-			array( 'anthropic', 'claude-haiku-5-5' ),
-			array( 'anthropic', 'claude-haiku-4-5' ),
-			array( 'google', 'gemini-3.5-flash-lite' ),
-			array( 'google', 'gemini-3.1-flash-lite' ),
-			array( 'openai', 'gpt-6-luna' ),
-			array( 'openai', 'gpt-5.6-luna' ),
-			array( 'openai', 'gpt-5.4-nano' ),
+			'claude-haiku-5-5',
+			'claude-haiku-4-5',
+			'gemini-3.5-flash-lite',
+			'gemini-3.1-flash-lite',
+			'gpt-6-luna',
+			'gpt-5.6-luna',
+			'gpt-5.4-nano',
 		);
 
 		return apply_filters( 'slug_automator_model_preferences', $models );
