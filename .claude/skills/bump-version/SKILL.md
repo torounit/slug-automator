@@ -21,7 +21,8 @@ Version bumps go through a pull request, because `main` only accepts changes via
 1. **Make sure the changelog is ready**
 
    Check that `README.md` has unreleased changes recorded under the `### Unreleased` heading in the
-   `## Changelog` section. If recent merged PRs aren't reflected yet, add entries there first:
+   `## Changelog` section. If recent merged PRs aren't reflected yet, add entries there first,
+   creating the `### Unreleased` heading above the latest version if it doesn't exist:
 
    ```bash
    gh pr list --state merged --limit 10 --repo torounit/slug-automator
@@ -54,7 +55,8 @@ Version bumps go through a pull request, because `main` only accepts changes via
    This updates:
    - `slug-automator.php`: the `Version:` header
    - `README.md`: `Stable tag:` (stable releases only), and the `### Unreleased` heading becomes
-     `### <version>` with a fresh empty `### Unreleased` heading above it
+     `### <version>`. No empty `### Unreleased` heading is left behind, since it would ship to
+     WordPress.org.
    - `package.json` and `package-lock.json`: the `version` field
 
    Review the diff before committing.
