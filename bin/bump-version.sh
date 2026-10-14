@@ -16,10 +16,16 @@ if ! echo "${version}" | grep -qE "alpha|beta|RC|rc"; then
 	rm README.md.bak
 fi
 
-# Turn the pending "Unreleased" changelog entry into the released version heading.
-sed -i.bak -e "s/^### Unreleased$/### ${version}/" README.md
+# Turn the pending "Unreleased" changelog entry into the released version heading,
+# and start a fresh "Unreleased" heading above it for future changes.
+sed -i.bak -e "s/^### Unreleased$/### Unreleased\\
+\\
+### ${version}/" README.md
 rm README.md.bak
 
 # Preserve the existing header alignment, only replace the value.
 sed -i.bak -E "s/^( \* Version: *).*/\1${version}/" slug-automator.php
 rm slug-automator.php.bak
+
+# Update package.json and package-lock.json without creating a git commit or tag.
+npm version "${version}" --no-git-tag-version --allow-same-version
