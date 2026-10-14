@@ -34,7 +34,6 @@
 		"husky": "^9.1.7",
 		"lint-staged": "^17.6.0",
 		"npm-run-all": "^4.1.5",
-		"release-it": "^21.1.1",
 		"typescript": "^6.0.3"
 	},
 	"scripts": {
@@ -52,8 +51,7 @@
 		"test:php": "npm-run-all test:php:setup test:php:base",
 		"test:php:setup": "wp-env --config=.wp-env.test.json start",
 		"test:php:base": "wp-env --config=.wp-env.test.json run --env-cwd='wp-content/plugins/slug-automator' wordpress vendor/bin/phpunit -c phpunit.xml.dist",
-		"prepare": "husky",
-		"release": "release-it"
+		"prepare": "husky"
 	},
 	"private": true,
 	"lint-staged": {
@@ -68,19 +66,5 @@
 		],
 		"*.{css,scss}": "wp-scripts lint-style",
 		"package.json": "wp-scripts lint-pkg-json"
-	},
-	"release-it": {
-		"git": {
-			"requireBranch": "main"
-		},
-		"hooks": {
-			"before:bump": "bash ./bin/bump-version.sh ${version}"
-		},
-		"github": {
-			"release": true
-		},
-		"npm": {
-			"publish": false
-		}
 	}
 }

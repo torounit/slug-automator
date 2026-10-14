@@ -7,11 +7,14 @@ description: Use when the user wants to bump the plugin version (e.g. "bump vers
 
 Use this skill when the user wants to bump the plugin version (e.g. "bump version", "/bump-version").
 
-Releases are handled by [release-it](https://github.com/release-it/release-it) via `npm run release`,
-not by manually editing files. release-it determines the version, runs `bin/bump-version.sh` to update
-`slug-automator.php` and `README.md`, updates `package.json` itself, then commits, tags, pushes, and
-creates a GitHub release. Pushing the tag triggers the existing CI release job
-(`.github/workflows/release.yml`), which builds and deploys to WordPress.org.
+Version bumps go through a pull request, because `main` only accepts changes via PRs.
+
+- `bin/bump-version.sh <version>` updates `slug-automator.php`, `README.md`, `package.json`, and
+  `package-lock.json`.
+- When a PR from a `release/*` branch is merged, CI (`.github/workflows/draft-release.yml`) creates a
+  draft GitHub release targeting the merge commit, with the changelog section as its notes.
+- Publishing the draft in the GitHub web UI creates the tag on that merge commit and triggers the
+  release job (`.github/workflows/release.yml`), which builds and deploys to WordPress.org.
 
 ## Steps
 
@@ -33,38 +36,45 @@ creates a GitHub release. Pushing the tag triggers the existing CI release job
    * Change description 2
    ```
 
-2. **(Optional) Dry run**
+2. **Create a release branch from the latest `main`**
+
+   Choose the version following [Semantic Versioning](https://semver.org/).
 
    ```bash
-   npm run release -- --dry-run
+   git switch main && git pull --ff-only
+   git switch -c release/<version>
    ```
 
-   Confirms the version bump, changelog conversion, and release steps without making any changes.
-
-3. **Run the release**
+3. **Bump the version**
 
    ```bash
-   npm run release
+   bash bin/bump-version.sh <version>
    ```
 
-   release-it will prompt for the version bump (patch / minor / major / custom), following
-   [Semantic Versioning](https://semver.org/). It then:
-   - Runs `bin/bump-version.sh <version>` to update `slug-automator.php` (`Version:` header) and
-     `README.md` (`Stable tag:` and the `### Unreleased` heading, which becomes `### <version>`)
-   - Updates `package.json`'s `version` field
-   - Commits, tags, and pushes
-   - Creates a GitHub release
+   This updates:
+   - `slug-automator.php`: the `Version:` header
+   - `README.md`: `Stable tag:` (stable releases only), and the `### Unreleased` heading becomes
+     `### <version>` with a fresh empty `### Unreleased` heading above it
+   - `package.json` and `package-lock.json`: the `version` field
 
-4. **Add a fresh `### Unreleased` heading**
+   Review the diff before committing.
 
-   After release-it converts `### Unreleased` to `### <version>`, add a new empty
-   `### Unreleased` heading above it in `README.md` so future changes have somewhere to go, then
-   commit and push that small follow-up change directly (no PR needed).
+4. **Commit, push, and open a PR**
+
+   ```bash
+   git commit -am "Release <version>"
+   git push -u origin release/<version>
+   gh pr create --base main --title "Release <version>"
+   ```
+
+5. **Publish the draft release**
+
+   After the PR is merged, CI creates a draft release `<version>`. Ask the user to review and publish
+   it in the GitHub web UI (https://github.com/torounit/slug-automator/releases). Publishing it tags
+   the merge commit on `main` and deploys to WordPress.org.
 
 ## Notes
 
-- `package-lock.json` does not need manual edits — it is updated automatically by `npm install`.
 - Write Changelog entries in English, based on PR titles and descriptions.
 - Do not edit version numbers in `slug-automator.php`, `package.json`, or the `Stable tag:` field
-  by hand — that's `release-it`'s and `bin/bump-version.sh`'s job, and doing it manually risks
-  drift between the files.
+  by hand — use `bin/bump-version.sh`, so the files don't drift apart.
