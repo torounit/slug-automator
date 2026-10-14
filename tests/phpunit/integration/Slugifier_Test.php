@@ -47,7 +47,7 @@ class Slugifier_Test extends \WP_UnitTestCase {
 		return [
 			'japanese greeting' => [ 'こんにちは', [ [ 'hello', 'hi', 'greeting' ] ], [ 'konnichiha', 'konnichiwa' ] ],
 			'japanese sentence' => [ '東京の天気', [ [ 'tokyo' ], [ 'weather', 'forecast', 'climate' ] ], [ 'tenki' ] ],
-			'mixed scripts'     => [ 'WordPressでブログを始める', [ [ 'wordpress' ], [ 'blog' ] ], [ 'hajimeru' ] ],
+			'mixed scripts'     => [ 'WordPressでブログを始める', [ [ 'wordpress' ], [ 'blog', 'blogging' ] ], [ 'hajimeru' ] ],
 			'english title'     => [ 'Hello World', [ [ 'hello' ], [ 'world' ] ], [] ],
 		];
 	}
@@ -67,9 +67,8 @@ class Slugifier_Test extends \WP_UnitTestCase {
 		$this->assertIsString( $slug );
 		$this->assertMatchesRegularExpression( self::SLUG_PATTERN, $slug );
 
-		// Match by word prefix so that inflections such as "blogging" are accepted.
 		foreach ( $expected as $synonyms ) {
-			$this->assertMatchesRegularExpression( '/(?:^|-)(?:' . implode( '|', $synonyms ) . ')/', $slug );
+			$this->assertNotEmpty( array_intersect( explode( '-', $slug ), $synonyms ), $slug );
 		}
 
 		foreach ( $forbidden as $word ) {
