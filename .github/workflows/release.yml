@@ -4,6 +4,38 @@ on:
         types: [published]
 
 jobs:
+    # Catches a release created by hand, or a draft whose tag was edited.
+    check-version:
+        name: Check Version
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v7
+
+            - name: Check the tag matches the versions in the files
+              env:
+                  TAG: ${{ github.event.release.tag_name }}
+              run: |
+                  package_version=$(node -p 'require("./package.json").version')
+                  header_version=$(sed -nE 's/^ \* Version: *(.*)$/\1/p' slug-automator.php)
+                  stable_tag=$(sed -nE 's/^Stable tag: *([^ ]*) *$/\1/p' README.md)
+
+                  status=0
+                  if [ "${TAG}" != "${package_version}" ]; then
+                      echo "::error::The tag ${TAG} does not match package.json (${package_version})."
+                      status=1
+                  fi
+                  if [ "${TAG}" != "${header_version}" ]; then
+                      echo "::error::The tag ${TAG} does not match the Version header in slug-automator.php (${header_version})."
+                      status=1
+                  fi
+                  # Prereleases leave the Stable tag on the last stable release.
+                  if ! echo "${TAG}" | grep -qE "alpha|beta|RC|rc" && [ "${TAG}" != "${stable_tag}" ]; then
+                      echo "::error::The tag ${TAG} does not match the Stable tag in README.md (${stable_tag})."
+                      status=1
+                  fi
+                  exit $status
+
     lint:
         name: Lint
         uses: ./.github/workflows/lint.yml
@@ -18,7 +50,7 @@ jobs:
 
     release:
         name: Upload Release Asset
-        needs: [lint, test]
+        needs: [check-version, lint, test]
         runs-on: ubuntu-latest
         permissions:
             attestations: write

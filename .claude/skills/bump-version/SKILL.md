@@ -78,5 +78,9 @@ Version bumps go through a pull request, because `main` only accepts changes via
 ## Notes
 
 - Write Changelog entries in English, based on PR titles and descriptions.
+- `bin/bump-version.sh` stops without changing anything when `README.md` has no `### Unreleased`
+  heading. CI also checks the versions: `draft-release.yml` fails when `package.json` does not
+  match the `release/<version>` branch or the changelog section is empty, and `release.yml` fails
+  when the published tag does not match `package.json`, the `Version:` header or the `Stable tag:`.
 - Do not edit version numbers in `slug-automator.php`, `package.json`, or the `Stable tag:` field
   by hand — use `bin/bump-version.sh`, so the files don't drift apart.

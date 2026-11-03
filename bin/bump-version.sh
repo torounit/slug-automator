@@ -9,6 +9,15 @@ fi
 
 version=$1
 
+# Work from the repository root, wherever the script is run from.
+cd "$(dirname "$0")/.."
+
+# The changelog entry for this release must exist before anything is changed.
+if ! grep -qE "^### Unreleased$" README.md; then
+	echo "README.md has no \"### Unreleased\" changelog heading. Add the entries for ${version} under it first."
+	exit 1
+fi
+
 # Stable tag should only track stable releases, not prereleases.
 if ! echo "${version}" | grep -qE "alpha|beta|RC|rc"; then
 	# Preserve the trailing markdown line break (two spaces) after the value.
