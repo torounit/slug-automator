@@ -1,1 +1,2 @@
-npx lint-staged
+# Sequential, since several tasks touch the same files (Prettier writes what ESLint and tsc read).
+npx lint-staged --concurrent false

@@ -54,12 +54,12 @@ Version bumps go through a pull request, because `main` only accepts changes via
 
    This updates:
    - `slug-automator.php`: the `Version:` header
-   - `README.md`: `Stable tag:` (stable releases only), and the `### Unreleased` heading becomes
+   - `README.md`: `Stable tag:`, and the `### Unreleased` heading becomes
      `### <version>`. No empty `### Unreleased` heading is left behind, since it would ship to
      WordPress.org.
    - `package.json` and `package-lock.json`: the `version` field
 
-   Review the diff before committing.
+   Review the diff, and check it with `bin/check-version.sh <version>`, before committing.
 
 4. **Commit, push, and open a PR**
 
@@ -78,5 +78,12 @@ Version bumps go through a pull request, because `main` only accepts changes via
 ## Notes
 
 - Write Changelog entries in English, based on PR titles and descriptions.
+- `bin/bump-version.sh` checks everything before changing a file, so a failed run can be repeated:
+  the version must be `1.2.3` (prereleases are not supported), and `README.md` needs a
+  `### Unreleased` section with entries.
+- `bin/check-version.sh <version>` checks that the files (including `package-lock.json`) and the
+  changelog are ready, and that no `### Unreleased` heading is left. CI runs it on the release PR
+  ("Check Release Version") and when drafting with `--untagged`, which also refuses a version
+  whose tag already exists, and when publishing. Run it locally after bumping.
 - Do not edit version numbers in `slug-automator.php`, `package.json`, or the `Stable tag:` field
   by hand — use `bin/bump-version.sh`, so the files don't drift apart.
