@@ -20,18 +20,15 @@ jobs:
 
             - name: Get version
               id: version
-              run: echo "version=$(node -p 'require("./package.json").version')" >> $GITHUB_OUTPUT
+              env:
+                  BRANCH: ${{ github.event.pull_request.head.ref }}
+              run: echo "version=${BRANCH#release/}" >> $GITHUB_OUTPUT
 
-            # Catches a release branch merged without running bin/bump-version.sh.
-            - name: Check the version matches the branch name
+            # Release Check runs this on the PR too; it fails here if the PR was merged anyway.
+            - name: Check the versions and the changelog
               env:
                   VERSION: ${{ steps.version.outputs.version }}
-                  BRANCH: ${{ github.event.pull_request.head.ref }}
-              run: |
-                  if [ "release/${VERSION}" != "${BRANCH}" ]; then
-                      echo "::error::package.json version ${VERSION} does not match the branch ${BRANCH}. Run bin/bump-version.sh."
-                      exit 1
-                  fi
+              run: bin/check-version.sh "$VERSION"
 
             - name: Extract release notes from the changelog
               env:
@@ -42,11 +39,6 @@ jobs:
                       found && /^#/ { exit }
                       found { print }
                   ' README.md > release-notes.md
-
-                  if [ ! -s release-notes.md ]; then
-                      echo "::error::README.md has no changelog entries under ### ${VERSION}."
-                      exit 1
-                  fi
 
             # The tag is created on the merge commit when the draft is published in the web UI.
             - name: Create draft release

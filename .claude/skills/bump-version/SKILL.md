@@ -59,7 +59,7 @@ Version bumps go through a pull request, because `main` only accepts changes via
      WordPress.org.
    - `package.json` and `package-lock.json`: the `version` field
 
-   Review the diff before committing.
+   Review the diff, and check it with `bin/check-version.sh <version>`, before committing.
 
 4. **Commit, push, and open a PR**
 
@@ -78,9 +78,13 @@ Version bumps go through a pull request, because `main` only accepts changes via
 ## Notes
 
 - Write Changelog entries in English, based on PR titles and descriptions.
-- `bin/bump-version.sh` stops without changing anything when `README.md` has no `### Unreleased`
-  heading. CI also checks the versions: `draft-release.yml` fails when `package.json` does not
-  match the `release/<version>` branch or the changelog section is empty, and `release.yml` fails
-  when the published tag does not match `package.json`, the `Version:` header or the `Stable tag:`.
+- `bin/bump-version.sh` checks everything before changing a file, so a failed run can be repeated:
+  the version must be semantic (`1.2.3`, `1.2.3-rc.1`), and `README.md` needs a `### Unreleased`
+  heading. For a stable release, the heading of its latest prerelease (e.g. `### 1.2.3-rc.1`) is
+  used instead when there is no `### Unreleased`. A `-` suffix marks a prerelease, which leaves
+  the `Stable tag:` alone.
+- `bin/check-version.sh <version>` checks that the files and the changelog are ready. CI runs it on
+  the release PR ("Check Release Version"), when drafting, and when publishing. Run it locally
+  after bumping.
 - Do not edit version numbers in `slug-automator.php`, `package.json`, or the `Stable tag:` field
   by hand — use `bin/bump-version.sh`, so the files don't drift apart.

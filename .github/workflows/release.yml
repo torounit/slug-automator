@@ -12,36 +12,21 @@ jobs:
             - name: Checkout code
               uses: actions/checkout@v7
 
+            # The release's own prerelease flag decides whether the Stable tag is checked.
             - name: Check the tag matches the versions in the files
               env:
                   TAG: ${{ github.event.release.tag_name }}
-              run: |
-                  package_version=$(node -p 'require("./package.json").version')
-                  header_version=$(sed -nE 's/^ \* Version: *(.*)$/\1/p' slug-automator.php)
-                  stable_tag=$(sed -nE 's/^Stable tag: *([^ ]*) *$/\1/p' README.md)
-
-                  status=0
-                  if [ "${TAG}" != "${package_version}" ]; then
-                      echo "::error::The tag ${TAG} does not match package.json (${package_version})."
-                      status=1
-                  fi
-                  if [ "${TAG}" != "${header_version}" ]; then
-                      echo "::error::The tag ${TAG} does not match the Version header in slug-automator.php (${header_version})."
-                      status=1
-                  fi
-                  # Prereleases leave the Stable tag on the last stable release.
-                  if ! echo "${TAG}" | grep -qE "alpha|beta|RC|rc" && [ "${TAG}" != "${stable_tag}" ]; then
-                      echo "::error::The tag ${TAG} does not match the Stable tag in README.md (${stable_tag})."
-                      status=1
-                  fi
-                  exit $status
+                  KIND: ${{ github.event.release.prerelease && 'prerelease' || 'stable' }}
+              run: bin/check-version.sh "$TAG" "$KIND"
 
     lint:
         name: Lint
+        needs: check-version
         uses: ./.github/workflows/lint.yml
 
     test:
         name: Test
+        needs: check-version
         uses: ./.github/workflows/test.yml
         # The PHPUnit job requests an OIDC token for the AI tests.
         permissions:
