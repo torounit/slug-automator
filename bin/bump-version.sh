@@ -28,76 +28,72 @@ fi
 
 readme=$(mktemp)
 trap 'rm -f "${readme}"' EXIT
-cp README.md "${readme}"
 
-if grep -qxF "### ${version}" README.md; then
-	# Already bumped: keep the changelog, unless new entries are waiting.
-	if grep -qx "### Unreleased" README.md; then
-		echo "README.md has both \"### Unreleased\" and \"### ${version}\". Move the Unreleased entries under ### ${version}, or release them as a new version." >&2
-		exit 1
-	fi
-else
-	# "### Unreleased" becomes "### <version>". A stable release also takes in
-	# the sections of its prereleases (e.g. "### 1.2.3-rc.1"), so its notes
-	# list every change since the last stable release.
-	merge_prereleases=0
-	if [ "${prerelease}" = false ]; then
-		merge_prereleases=1
-	fi
+# "### Unreleased" and any "### <version>" become one "### <version>" section.
+# A stable release also takes in the sections of its prereleases (e.g.
+# "### 1.2.3-rc.1"), so its notes list every change since the last stable
+# release. Running it again for the same version keeps the section as it is.
+merge_prereleases=0
+if [ "${prerelease}" = false ]; then
+	merge_prereleases=1
+fi
 
-	status=0
-	awk -v version="${version}" -v merge_prereleases="${merge_prereleases}" '
-		function is_merged(line) {
-			return line == "### Unreleased" ||
-				(merge_prereleases && index(line, "### " version "-") == 1)
-		}
-		{ lines[NR] = $0 }
-		END {
-			for (i = 1; i <= NR; i++) {
-				if (lines[i] ~ /^#/) {
-					merged = is_merged(lines[i])
-					if (merged && !first) {
-						first = i
-					}
-				}
+status=0
+awk -v version="${version}" -v merge_prereleases="${merge_prereleases}" -v boundary="${CHANGELOG_BOUNDARY}" '
+	function is_merged(line) {
+		return line == "### Unreleased" || line == "### " version ||
+			(merge_prereleases && index(line, "### " version "-") == 1)
+	}
+	{ lines[NR] = $0 }
+	END {
+		for (i = 1; i <= NR; i++) {
+			if (lines[i] ~ boundary) {
+				merged = is_merged(lines[i])
 				if (merged) {
 					drop[i] = 1
-					if (lines[i] !~ /^#/ && lines[i] ~ /[^[:space:]]/) {
-						entries[++count] = lines[i]
+					if (!first) {
+						first = i
 					}
+					continue
 				}
 			}
-			if (!first) {
-				exit 2
-			}
-			if (!count) {
-				exit 3
-			}
-			for (i = 1; i <= NR; i++) {
-				if (i == first) {
-					print "### " version
-					print ""
-					for (j = 1; j <= count; j++) {
-						print entries[j]
-					}
-					print ""
-				}
-				if (!drop[i]) {
-					print lines[i]
+			if (merged) {
+				drop[i] = 1
+				if (lines[i] ~ /[^[:space:]]/) {
+					entries[++count] = lines[i]
 				}
 			}
 		}
-	' README.md > "${readme}" || status=$?
+		if (!first) {
+			exit 2
+		}
+		if (!count) {
+			exit 3
+		}
+		for (i = 1; i <= NR; i++) {
+			if (i == first) {
+				print "### " version
+				print ""
+				for (j = 1; j <= count; j++) {
+					print entries[j]
+				}
+				print ""
+			}
+			if (!drop[i]) {
+				print lines[i]
+			}
+		}
+	}
+' README.md > "${readme}" || status=$?
 
-	if [ "${status}" -eq 2 ]; then
-		echo "README.md has no \"### Unreleased\" changelog heading. Add the entries for ${version} under it first." >&2
-		exit 1
-	elif [ "${status}" -eq 3 ]; then
-		echo "The \"### Unreleased\" section in README.md has no entries. Add the changes in ${version} first." >&2
-		exit 1
-	elif [ "${status}" -ne 0 ]; then
-		exit "${status}"
-	fi
+if [ "${status}" -eq 2 ]; then
+	echo "README.md has no changelog section for ${version}. Add its entries under a \"### Unreleased\" heading first." >&2
+	exit 1
+elif [ "${status}" -eq 3 ]; then
+	echo "The changelog sections for ${version} in README.md (### Unreleased, ### ${version} and its prereleases) have no entries. Add the changes first." >&2
+	exit 1
+elif [ "${status}" -ne 0 ]; then
+	exit "${status}"
 fi
 
 # Stable tag should only track stable releases, not prereleases.
@@ -107,11 +103,13 @@ if [ "${prerelease}" = false ]; then
 	rm "${readme}.bak"
 fi
 
-cp "${readme}" README.md
+# Update package.json and package-lock.json without creating a git commit or tag.
+# It runs first, since it is the step most likely to fail (npm itself); nothing
+# else has changed yet when it does.
+npm version "${version}" --no-git-tag-version --allow-same-version
 
 # Preserve the existing header alignment, only replace the value.
 sed -i.bak -E "s/^( \* Version: *).*/\1${version}/" "${PLUGIN_FILE}"
 rm "${PLUGIN_FILE}.bak"
 
-# Update package.json and package-lock.json without creating a git commit or tag.
-npm version "${version}" --no-git-tag-version --allow-same-version
+cp "${readme}" README.md

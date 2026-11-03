@@ -3,6 +3,9 @@ on:
     pull_request:
         branches: [main]
 
+permissions:
+    contents: read
+
 jobs:
     check-version:
         name: Check Release Version
@@ -12,8 +15,9 @@ jobs:
         steps:
             - uses: actions/checkout@v7
 
-            # Catches a release branch where bin/bump-version.sh was not run, before it is merged.
+            # Catches a release branch where bin/bump-version.sh was not run, or whose version
+            # was already released, before it is merged.
             - name: Check the versions and the changelog
               env:
                   BRANCH: ${{ github.head_ref }}
-              run: bin/check-version.sh "${BRANCH#release/}"
+              run: bin/check-version.sh "${BRANCH#release/}" --untagged

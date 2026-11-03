@@ -28,7 +28,7 @@ jobs:
             - name: Check the versions and the changelog
               env:
                   VERSION: ${{ steps.version.outputs.version }}
-              run: bin/check-version.sh "$VERSION"
+              run: bin/check-version.sh "$VERSION" --untagged
 
             - name: Extract release notes from the changelog
               env:
@@ -43,8 +43,9 @@ jobs:
                   TARGET: ${{ github.event.pull_request.merge_commit_sha }}
               # A version with a "-" suffix is drafted as a pre-release, so that publishing it skips the Stable tag check.
               run: |
+                  source bin/release-lib.sh
                   prerelease=()
-                  case "$VERSION" in
-                      *-*) prerelease=(--prerelease) ;;
-                  esac
+                  if is_prerelease "$VERSION"; then
+                      prerelease=(--prerelease)
+                  fi
                   gh release create "$VERSION" --draft "${prerelease[@]}" --target "$TARGET" --title "$VERSION" --notes-file release-notes.md
