@@ -41,11 +41,4 @@ jobs:
                   GH_TOKEN: ${{ github.token }}
                   VERSION: ${{ steps.version.outputs.version }}
                   TARGET: ${{ github.event.pull_request.merge_commit_sha }}
-              # A version with a "-" suffix is drafted as a pre-release, so that publishing it skips the Stable tag check.
-              run: |
-                  source bin/release-lib.sh
-                  prerelease=()
-                  if is_prerelease "$VERSION"; then
-                      prerelease=(--prerelease)
-                  fi
-                  gh release create "$VERSION" --draft "${prerelease[@]}" --target "$TARGET" --title "$VERSION" --notes-file release-notes.md
+              run: gh release create "$VERSION" --draft --target "$TARGET" --title "$VERSION" --notes-file release-notes.md

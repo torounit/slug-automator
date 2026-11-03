@@ -12,12 +12,10 @@ jobs:
             - name: Checkout code
               uses: actions/checkout@v7
 
-            # The release's own prerelease flag decides whether the Stable tag is checked.
             - name: Check the tag matches the versions in the files
               env:
                   TAG: ${{ github.event.release.tag_name }}
-                  KIND: ${{ github.event.release.prerelease && 'prerelease' || 'stable' }}
-              run: bin/check-version.sh "$TAG" "$KIND"
+              run: bin/check-version.sh "$TAG"
 
     lint:
         name: Lint
