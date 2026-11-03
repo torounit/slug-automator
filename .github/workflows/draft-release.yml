@@ -33,12 +33,7 @@ jobs:
             - name: Extract release notes from the changelog
               env:
                   VERSION: ${{ steps.version.outputs.version }}
-              run: |
-                  awk -v heading="### ${VERSION}" '
-                      $0 == heading { found = 1; next }
-                      found && /^#/ { exit }
-                      found { print }
-                  ' README.md > release-notes.md
+              run: bin/check-version.sh --notes "$VERSION" > release-notes.md
 
             # The tag is created on the merge commit when the draft is published in the web UI.
             - name: Create draft release
@@ -46,4 +41,10 @@ jobs:
                   GH_TOKEN: ${{ github.token }}
                   VERSION: ${{ steps.version.outputs.version }}
                   TARGET: ${{ github.event.pull_request.merge_commit_sha }}
-              run: gh release create "$VERSION" --draft --target "$TARGET" --title "$VERSION" --notes-file release-notes.md
+              # A version with a "-" suffix is drafted as a pre-release, so that publishing it skips the Stable tag check.
+              run: |
+                  prerelease=()
+                  case "$VERSION" in
+                      *-*) prerelease=(--prerelease) ;;
+                  esac
+                  gh release create "$VERSION" --draft "${prerelease[@]}" --target "$TARGET" --title "$VERSION" --notes-file release-notes.md

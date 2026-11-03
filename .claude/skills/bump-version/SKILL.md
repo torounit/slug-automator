@@ -80,11 +80,15 @@ Version bumps go through a pull request, because `main` only accepts changes via
 - Write Changelog entries in English, based on PR titles and descriptions.
 - `bin/bump-version.sh` checks everything before changing a file, so a failed run can be repeated:
   the version must be semantic (`1.2.3`, `1.2.3-rc.1`), and `README.md` needs a `### Unreleased`
-  heading. For a stable release, the heading of its latest prerelease (e.g. `### 1.2.3-rc.1`) is
-  used instead when there is no `### Unreleased`. A `-` suffix marks a prerelease, which leaves
-  the `Stable tag:` alone.
-- `bin/check-version.sh <version>` checks that the files and the changelog are ready. CI runs it on
-  the release PR ("Check Release Version"), when drafting, and when publishing. Run it locally
-  after bumping.
+  section with entries. A `-` suffix marks a prerelease, which leaves the `Stable tag:` alone. A
+  stable release also takes in the sections of its prereleases (`### 1.2.3-rc.1`, …), so its
+  notes list every change since the last stable release; it can then be bumped without a
+  `### Unreleased`. Running it again for the same version is fine while no `### Unreleased` is
+  waiting.
+- `bin/check-version.sh <version>` checks that the files (including `package-lock.json`) and the
+  changelog are ready, and that no `### Unreleased` heading is left. CI runs it on the release PR
+  ("Check Release Version"), when drafting, and when publishing. Run it locally after bumping.
+- A prerelease is drafted as a GitHub pre-release. Keep it marked as one when publishing: the
+  publish check skips the `Stable tag:` only for releases marked pre-release.
 - Do not edit version numbers in `slug-automator.php`, `package.json`, or the `Stable tag:` field
   by hand — use `bin/bump-version.sh`, so the files don't drift apart.
