@@ -27,3 +27,4 @@ package.json
 phpcs.xml.dist
 phpunit.xml.dist
 tsconfig.json
+.node-version
